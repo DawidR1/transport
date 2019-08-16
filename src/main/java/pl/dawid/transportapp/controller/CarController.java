@@ -9,9 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.dawid.transportapp.dto.DriverDto;
+import pl.dawid.transportapp.dto.CarDto;
 import pl.dawid.transportapp.exception.NotFoundException;
-import pl.dawid.transportapp.service.DriverService;
+import pl.dawid.transportapp.service.CarService;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -20,55 +20,57 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-import static pl.dawid.transportapp.util.Mappings.DRIVER;
+import static pl.dawid.transportapp.util.Mappings.CAR;
 import static pl.dawid.transportapp.util.Mappings.ID_PATH;
 
 @RestController
-@RequestMapping(DRIVER)
-public class DriverController {
+@RequestMapping(CAR)
+public class CarController {
 
-    private final DriverService service;
+
+    private final CarService service;
 
     @Autowired
-    public DriverController(DriverService service) {
+    public CarController(CarService service) {
         this.service = service;
     }
 
     @CrossOrigin("http://localhost:4200")
     @GetMapping(path = ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Resource<DriverDto> getDriverById(@PathVariable Long id) {
+    public Resource<CarDto> getCarById(@PathVariable Long id) {
         return service.findById(id)
                 .map(this::mapToResourceWithLink)
-                .orElseThrow(() -> new NotFoundException("Driver with id= " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("Car with id= " + id + " not found"));
     }
+
     @CrossOrigin("http://localhost:4200")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource> getAllDrivers() {
+    public Resources<Resource> getAllCars() {
         List<Resource> resourceList = service.findAll().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
-        Link link = linkTo(methodOn(DriverController.class).getAllDrivers()).withSelfRel();
+        Link link = linkTo(methodOn(CarController.class).getAllCars()).withSelfRel();
         return new Resources<>(resourceList, link);
     }
 
-    private Resource<DriverDto> mapToResourceWithLink(DriverDto driver) {
-        Resource<DriverDto> resource = new Resource<>(driver);
-        resource.add(linkTo(methodOn(DriverController.class).getDriverById(driver.getId())).withSelfRel());
+    private Resource<CarDto> mapToResourceWithLink(CarDto car) {
+        Resource<CarDto> resource = new Resource<>(car);
+        resource.add(linkTo(methodOn(CarController.class).getCarById(car.getId())).withSelfRel());
         return resource;
     }
 
     @PostMapping
-    public ResponseEntity postDriver(@Valid @RequestBody DriverDto driverDto) {
-        Long id = service.addDriver(driverDto);
+    public ResponseEntity postCar(@Valid @RequestBody CarDto carDto) {
+        Long id = service.addCar(carDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentServletMapping().path("/car/{id}").buildAndExpand(id).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping(ID_PATH)
-    public ResponseEntity deleteDriver(@PathVariable Long id) {
-        service.removeDriver(id);
+    public ResponseEntity deleteCar(@PathVariable Long id) {
+        service.removeCar(id);
         return ResponseEntity.ok().build();
     }
 }

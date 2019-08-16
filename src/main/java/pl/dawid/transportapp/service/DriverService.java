@@ -3,13 +3,13 @@ package pl.dawid.transportapp.service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pl.dawid.transportapp.dto.DriverDto;
 import pl.dawid.transportapp.exception.ExistInDataBase;
 import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.model.Driver;
 import pl.dawid.transportapp.repository.DriverRepository;
 
+//import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +37,7 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
                 .collect(toList());
     }
 
-    @Transactional
+//    @Transactional
     public Long addDriver(DriverDto driverDto) {
         repository.findByPesel(driverDto.getPesel())
                 .ifPresent((driver) -> {
@@ -48,7 +48,7 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
         return driver.getId();
     }
 
-    @Transactional
+//    @Transactional
     public void removeDriver(Long id) {
         repository.findById(id).ifPresentOrElse(repository::delete, () -> {
             throw new NotFoundException("Driver not found");

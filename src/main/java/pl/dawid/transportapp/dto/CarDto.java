@@ -5,21 +5,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DriverDto {
+public class CarDto {
 
     private Long id;
 
-    @Size(min = 11, max = 11, message = "{pl.dawid.transportapp.dto.DriverDto.pesel}")
-    private String pesel;
+    //TODO regex
+    private String plate;
 
     @NotBlank(message = "{pl.dawid.transportapp.dto.empty}")
-    private String firstName;
+    private String brand;
 
     @NotBlank(message = "{pl.dawid.transportapp.dto.empty}")
-    private String lastName;
+    private String model;
 }
