@@ -14,6 +14,7 @@ import pl.dawid.transportapp.exception.ExistInDataBase;
 import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.model.Driver;
 import pl.dawid.transportapp.repository.DriverRepository;
+import pl.dawid.transportapp.tool.ObjectTestGenerator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,12 +36,14 @@ class DriverServiceTest {
 
     @InjectMocks
     private DriverService driverService;
+
     private List<Driver> fakeDrivers;
 
     @BeforeEach
     void init() {
-        fakeDrivers = Arrays.asList(new Driver(1L, "pessel", "name1", "lastName1"),
-                new Driver(2L, "pesel", "name2", "lastName2"));
+        Driver driver = ObjectTestGenerator.getCorrectDriver(1);
+        Driver driver2 = ObjectTestGenerator.getCorrectDriver(2);
+        fakeDrivers = Arrays.asList(driver, driver2);
         when(driverRepository.findAll()).thenReturn(fakeDrivers);
         when(driverRepository.findById(anyLong())).thenReturn(Optional.of(fakeDrivers.get(0)));
     }

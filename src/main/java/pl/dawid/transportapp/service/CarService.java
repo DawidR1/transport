@@ -3,6 +3,7 @@ package pl.dawid.transportapp.service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.dawid.transportapp.dto.CarDto;
 import pl.dawid.transportapp.exception.ExistInDataBase;
 import pl.dawid.transportapp.exception.NotFoundException;
@@ -37,7 +38,7 @@ public class CarService implements DtoConverter<CarDto, Car> {
                 .collect(toList());
     }
 
-    //    @Transactional
+    @Transactional
     public Long addCar(CarDto carDto) {
         repository.findByPlate(carDto.getPlate())
                 .ifPresent((car) -> {
@@ -48,7 +49,7 @@ public class CarService implements DtoConverter<CarDto, Car> {
         return car.getId();
     }
 
-    //    @Transactional
+    @Transactional
     public void removeCar(Long id) {
         repository.findById(id).ifPresentOrElse(repository::delete, () -> {
             throw new NotFoundException("Car not found");

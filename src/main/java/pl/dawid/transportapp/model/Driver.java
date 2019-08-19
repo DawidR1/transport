@@ -5,11 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Driver {
 
     @Id
@@ -25,4 +25,15 @@ public class Driver {
     @Column(nullable = false)
     private String lastName;
 
+    private String imageName;
+
+    public Driver(String pesel, String firstName, String lastName) {
+        this.pesel = pesel;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Optional<String> getPictureName() {
+        return Optional.ofNullable(imageName);
+    }
 }

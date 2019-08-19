@@ -1,6 +1,5 @@
 package pl.dawid.transportapp.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class DriverDto {
 
@@ -22,4 +20,13 @@ public class DriverDto {
 
     @NotBlank(message = "{pl.dawid.transportapp.dto.empty}")
     private String lastName;
+
+    private String imageName;
+
+    public DriverDto(Long id, String pesel, String firstName, String lastName) {
+        this.id = id;
+        this.pesel = pesel;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }

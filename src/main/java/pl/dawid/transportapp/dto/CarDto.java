@@ -3,6 +3,7 @@ package pl.dawid.transportapp.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.dawid.transportapp.validator.PlateMatches;
 
 import javax.validation.constraints.NotBlank;
 
@@ -13,7 +14,8 @@ public class CarDto {
 
     private Long id;
 
-    //TODO regex
+    @NotBlank
+    @PlateMatches
     private String plate;
 
     @NotBlank(message = "{pl.dawid.transportapp.dto.empty}")
