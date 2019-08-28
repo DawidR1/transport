@@ -8,11 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.dawid.transportapp.controller.tool.LocationCreator;
 import pl.dawid.transportapp.dto.CarDto;
 import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.service.CarService;
-import pl.dawid.transportapp.util.Mappings;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -21,8 +20,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-import static pl.dawid.transportapp.util.Mappings.CAR_URL;
-import static pl.dawid.transportapp.util.Mappings.ID_PATH;
+import static pl.dawid.transportapp.util.Mappings.*;
 
 @RestController
 @RequestMapping(CAR_URL)
@@ -35,7 +33,7 @@ public class CarController {
         this.service = service;
     }
 
-    @CrossOrigin(Mappings.CROSS_ORIGIN_LOCAL_FRONT)
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<CarDto> getCarById(@PathVariable Long id) {
         return service.findById(id)
@@ -43,7 +41,7 @@ public class CarController {
                 .orElseThrow(() -> new NotFoundException("Car with id= " + id + " not found"));
     }
 
-    @CrossOrigin(Mappings.CROSS_ORIGIN_LOCAL_FRONT)
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public Resources<Resource> getAllCars() {
@@ -54,13 +52,21 @@ public class CarController {
         return new Resources<>(resourceList, link);
     }
 
-    @CrossOrigin(Mappings.CROSS_ORIGIN_LOCAL_FRONT)
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @PostMapping
     public ResponseEntity postCar(@Valid @RequestBody CarDto carDto) {
         Long id = service.addCar(carDto);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentServletMapping().path("/car/{id}").buildAndExpand(id).toUri();
+        URI location = LocationCreator.getLocation(CAR_URL, id);
         return ResponseEntity.created(location).build();
+    }
+
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @PutMapping(ID_PATH)
+    public ResponseEntity updateCar(@Valid @RequestBody CarDto carDto, @PathVariable Long id) {
+        service.update(carDto, id);
+        URI location = LocationCreator.getLocation(CAR_URL, id);
+        ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.ok();
+        return bodyBuilder.location(location).build();
     }
 
     @DeleteMapping(ID_PATH)

@@ -1,11 +1,9 @@
 package pl.dawid.transportapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,8 +37,11 @@ class DriverControllerTest {
 
     @BeforeEach
     void init() {
-        List<DriverDto> fakeDrivers = Arrays.asList(new DriverDto(1L, "pesel", "name1", "lastName1"),
-                new DriverDto(2L, "pesel", "name2", "lastName2"));
+        DriverDto driver = ObjectTestGenerator.getCorrectDriverDto(1);
+        driver.setId(1L);
+        DriverDto driver2 = ObjectTestGenerator.getCorrectDriverDto(2);
+        driver2.setId(2L);
+        List<DriverDto> fakeDrivers = Arrays.asList(driver, driver2);
         when(service.findAll()).thenReturn(fakeDrivers);
         when(service.findById(anyLong())).thenReturn(Optional.of(fakeDrivers.get(0)));
         when(service.addDriver(anyObject())).thenReturn(1L);
@@ -63,7 +64,7 @@ class DriverControllerTest {
     void shouldReturnDriverWithIdOneWhenRequested() throws Exception {
         mvc.perform(get("/driver/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("firstName", is("name1")))
+                .andExpect(jsonPath("firstName", is("firstName1")))
                 .andExpect(jsonPath("_links.self.href", is("http://localhost/driver/1")));
     }
 
@@ -81,8 +82,8 @@ class DriverControllerTest {
     }
 
     @Test
-    void shouldReturn302WhenDriverWasSaved() throws Exception {
-        DriverDto driverDto = ObjectTestGenerator.getCorrectDriverDto();
+    void shouldReturn201WhenDriverWasSaved() throws Exception {
+        DriverDto driverDto = ObjectTestGenerator.getCorrectDriverDto(1);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(driverDto);
         mvc.perform(post("/driver")

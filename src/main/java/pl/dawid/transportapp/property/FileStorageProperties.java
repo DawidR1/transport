@@ -3,7 +3,8 @@ package pl.dawid.transportapp.property;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "file")
-public class FileStorageProperties {
+public class FileStorageProperties { //TODO interface
+
     private String uploadDir;
 
     public String getUploadDir() {

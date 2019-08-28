@@ -2,9 +2,9 @@ package pl.dawid.transportapp.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.dawid.transportapp.validator.PeselMatches;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
@@ -12,7 +12,7 @@ public class DriverDto {
 
     private Long id;
 
-    @Size(min = 11, max = 11, message = "{pl.dawid.transportapp.dto.DriverDto.pesel}")
+    @PeselMatches
     private String pesel;
 
     @NotBlank(message = "{pl.dawid.transportapp.dto.empty}")

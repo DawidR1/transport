@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import pl.dawid.transportapp.dto.DriverDto;
 import pl.dawid.transportapp.exception.ExistInDataBase;
 import pl.dawid.transportapp.exception.NotFoundException;
@@ -19,10 +20,12 @@ import static java.util.stream.Collectors.toList;
 public class DriverService implements DtoConverter<DriverDto, Driver> {
 
     private final DriverRepository repository;
+    private final FileStorageService storeFile;
 
     @Autowired
-    public DriverService(DriverRepository repository) {
+    public DriverService(DriverRepository repository, FileStorageService storeFile) {
         this.repository = repository;
+        this.storeFile = storeFile;
     }
 
     public Optional<DriverDto> findById(long id) {
@@ -54,6 +57,20 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
         });
     }
 
+    @Transactional
+    public void update(DriverDto driverDto, Long id) { //TODO dorobic testy
+        Driver driverDb = repository.findById(id).orElseThrow(() -> new ExistInDataBase("Driver not found"));
+        repository.findByPesel(driverDto.getPesel()).ifPresent(driver -> {
+            if (!driver.getId().equals(driverDb.getId())) {
+                throw new ExistInDataBase("Driver with pesel: " + driverDb.getPesel() + " already exist");//FIXME Dawid redundancja, przeniesc do messages
+            }
+        });
+        driverDto.setId(id);
+        driverDto.setImageName(driverDb.getImageName());        //TODO przetestowac
+        Driver driver = convertToEntity(driverDto);
+        repository.save(driver);
+    }
+
     @Override
     public DriverDto convertToDto(Driver driver) {
         DriverDto driverDto = new DriverDto();
@@ -66,5 +83,12 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
         Driver driver = new Driver();
         BeanUtils.copyProperties(driverDto, driver);
         return driver;
+    }
+
+    public void updateDriver(Long id, MultipartFile multipartFile) {
+        Driver driver = repository.findById(id).orElseThrow(() -> new NotFoundException("Driver Not Found"));
+        String fileName = storeFile.storeFile(multipartFile, id);
+        driver.setImageName(fileName);
+        repository.save(driver);
     }
 }

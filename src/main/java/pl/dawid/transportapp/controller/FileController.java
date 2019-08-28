@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import pl.dawid.transportapp.service.DriverService;
 import pl.dawid.transportapp.service.FileStorageService;
+import pl.dawid.transportapp.util.Mappings;
 
 import static pl.dawid.transportapp.util.Mappings.FILE_URL;
 
@@ -16,21 +16,22 @@ import static pl.dawid.transportapp.util.Mappings.FILE_URL;
 @RequestMapping(FILE_URL)
 public class FileController {
 
-
+    private final DriverService service;
     private final FileStorageService fileStorageService;
 
     @Autowired
-    public FileController(FileStorageService fileStorageService) {
+    public FileController(FileStorageService fileStorageService, DriverService service) {
         this.fileStorageService = fileStorageService;
+        this.service = service;
     }
 
-//    @PostMapping("/{id}") //TODO implementation later
-//    public ResponseEntity saveFile(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long id) {
-//        Driver driver = driverService.findById(id).orElseThrow(() -> new NotFoundException("Not Found Driver"));
-//        driver.getDriverDetails().setImagePath(fileStorageService.storeFile(multipartFile, id));
-//        driverService.save(driver);
-//        return ResponseEntity.ok().build();
-//    }
+    @CrossOrigin(Mappings.CROSS_ORIGIN_LOCAL_FRONT)
+    @PostMapping("/driver/{id}")
+    public ResponseEntity saveFile(@RequestParam("file") MultipartFile multipartFile,
+                                   @PathVariable Long id) {
+        service.updateDriver(id, multipartFile);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/{path}")
     public ResponseEntity<Resource> getFile(@PathVariable String path) {

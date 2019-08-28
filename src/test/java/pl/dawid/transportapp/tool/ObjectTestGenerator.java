@@ -15,11 +15,11 @@ public class ObjectTestGenerator {
         return driver;
     }
 
-    public static DriverDto getCorrectDriverDto() {
+    public static DriverDto getCorrectDriverDto(int number) {
         DriverDto driver = new DriverDto();
-        driver.setFirstName("firstName");
-        driver.setLastName("lastName");
-        driver.setPesel("12345678912");
+        driver.setFirstName("firstName" + number);
+        driver.setLastName("lastName" + number);
+        driver.setPesel("123456789123");
         return driver;
     }
 
@@ -27,7 +27,7 @@ public class ObjectTestGenerator {
         Driver driver = new Driver();
         driver.setFirstName("firstName" + number);
         driver.setLastName("lastName" + number);
-        driver.setPesel("12345678912");
+        driver.setPesel("123456789123");
         return driver;
     }
 

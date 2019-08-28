@@ -16,7 +16,7 @@ public class Driver {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 11)
+    @Column(nullable = false, unique = true, length = 12)
     private String pesel;
 
     @Column(nullable = false)
@@ -31,9 +31,5 @@ public class Driver {
         this.pesel = pesel;
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    public Optional<String> getPictureName() {
-        return Optional.ofNullable(imageName);
     }
 }

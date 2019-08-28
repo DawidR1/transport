@@ -26,22 +26,22 @@ class DriverDtoTest {
 
     @Test
     void shouldSaveWhenDataCorrect() {
-        DriverDto driver = getCorrectDriverDto();
+        DriverDto driver = getCorrectDriverDto(1);
         Set<ConstraintViolation<DriverDto>> violations = validator.validate(driver);
+        System.out.println(violations.toString());
         Assert.assertTrue(violations.isEmpty());
     }
 
     @Test
     void shouldNotSaveWhenDataWrong() {
         DriverDto driver = getIncorrectDriverDto();
-        ;
         Set<ConstraintViolation<DriverDto>> violations = validator.validate(driver);
         Assert.assertEquals(3, violations.size());
     }
 
     @Test
     void shouldNotSaveWhenPeselHasLetter() {
-        DriverDto driver = getCorrectDriverDto();
+        DriverDto driver = getCorrectDriverDto(1);
         driver.setPesel("withLetter");
         Set<ConstraintViolation<DriverDto>> violations = validator.validate(driver);
         Assert.assertFalse(violations.isEmpty());
@@ -49,12 +49,12 @@ class DriverDtoTest {
 
     @Test
     void shouldNotSaveWhenPeselHasIncorrectSize() {
-        DriverDto driver = getCorrectDriverDto();
+        DriverDto driver = getCorrectDriverDto(1);
         driver.setPesel("1234567891");
         Set<ConstraintViolation<DriverDto>> violations = validator.validate(driver);
         Assert.assertFalse(violations.isEmpty());
 
-        driver.setPesel("123456789123");
+        driver.setPesel("12345678912");
         violations = validator.validate(driver);
         Assert.assertFalse(violations.isEmpty());
     }

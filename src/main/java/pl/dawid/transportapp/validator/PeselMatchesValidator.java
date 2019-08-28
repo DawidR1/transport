@@ -4,11 +4,11 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
-public class PlateMatchesValidator implements ConstraintValidator<PlateMatches, String> {
+public class PeselMatchesValidator implements ConstraintValidator<PeselMatches, String> {
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        String pattern = "[A-Z]{2,3}[0-9]{4,5}";
+        String pattern = "\\d{12}";
         return Pattern.matches(pattern,s);
     }
 }

@@ -27,7 +27,7 @@ public class FileStorageService {
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
-            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
+            throw new FileStorageException("{could_not_create_directory_for_files}", ex);
         }
     }
 
@@ -37,7 +37,7 @@ public class FileStorageService {
         try {
 
             if (fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+                throw new FileStorageException("{invalid_file_path} " + fileName);
             }
 
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
@@ -52,11 +52,7 @@ public class FileStorageService {
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
-                return Optional.of(resource);
-            } else {
-                return Optional.empty();
-            }
+            return resource.exists() ? Optional.of(resource) : Optional.empty();
         } catch (MalformedURLException ex) {
             throw new MyFileNotFoundException("File not found " + fileName, ex);
         }
