@@ -2,8 +2,15 @@ package pl.dawid.transportapp.tool;
 
 import pl.dawid.transportapp.dto.CarDto;
 import pl.dawid.transportapp.dto.DriverDto;
+import pl.dawid.transportapp.enums.TripStatus;
 import pl.dawid.transportapp.model.Car;
 import pl.dawid.transportapp.model.Driver;
+import pl.dawid.transportapp.model.Location;
+import pl.dawid.transportapp.model.Trip;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
 
 public class ObjectTestGenerator {
 
@@ -55,5 +62,31 @@ public class ObjectTestGenerator {
         car.setModel("model" + number);
         car.setBrand("brand" + number);
         return car;
+    }
+
+    public static Location getCorrectLocation(int number) {
+        Location location = new Location();
+        location.setCity("Katowice");
+        location.setCountry("Poland");
+        location.setId((long) number);
+        location.setPostalCode("PostalCode");
+        location.setStreetAddress("mainRoad");
+        return location;
+    }
+
+    public static Trip getCorrectTrip(int number) {
+        Trip trip = new Trip();
+        trip.setCar(getCorrectCar(1));
+        trip.setEmployee(getCorrectDriver(1));
+        trip.setDateStart(LocalDate.of(2000, Month.JANUARY, 1));
+        trip.setDateFinish(LocalDate.of(2001, Month.JANUARY, 1));
+        trip.setId((long) number);
+        trip.setIncome(BigDecimal.ZERO);
+        trip.setPlaceFinish(getCorrectLocation(1));
+        trip.setPlaceStart(getCorrectLocation(2));
+        trip.setDestination(getCorrectLocation(3));
+        trip.setStatus(TripStatus.IN_PROGRESS);
+        trip.setFuel(10);
+        return trip;
     }
 }

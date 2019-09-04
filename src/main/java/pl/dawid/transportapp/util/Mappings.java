@@ -6,4 +6,6 @@ public class Mappings {
     public static final String CAR_URL = "/car";
     public static final String FILE_URL = "/file";
     public static final String CROSS_ORIGIN_LOCAL_FRONT = "http://localhost:4200";
+    public static final String TRIP_URL = "/trip";
+    public static final String TRIP_NARROW_URL = TRIP_URL + "/narrow";
 }

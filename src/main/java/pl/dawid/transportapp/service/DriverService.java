@@ -1,6 +1,5 @@
 package pl.dawid.transportapp.service;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +29,12 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
 
     public Optional<DriverDto> findById(long id) {
         return repository.findById(id)
-                .map(this::convertToDto);
+                .map(entity -> convertToDto(entity, new DriverDto()));
     }
 
     public List<DriverDto> findAll() {
         return repository.findAll().stream()
-                .map(this::convertToDto)
+                .map(entity -> convertToDto(entity, new DriverDto()))
                 .collect(toList());
     }
 
@@ -45,7 +44,7 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
                 .ifPresent((driver) -> {
                     throw new ExistInDataBase("Driver with Pesel: " + driver.getPesel() + " already exist");
                 });
-        Driver driver = convertToEntity(driverDto);
+        Driver driver = convertToEntity(driverDto, new Driver());
         repository.save(driver);
         return driver.getId();
     }
@@ -67,22 +66,8 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
         });
         driverDto.setId(id);
         driverDto.setImageName(driverDb.getImageName());        //TODO przetestowac
-        Driver driver = convertToEntity(driverDto);
+        Driver driver = convertToEntity(driverDto, new Driver());
         repository.save(driver);
-    }
-
-    @Override
-    public DriverDto convertToDto(Driver driver) {
-        DriverDto driverDto = new DriverDto();
-        BeanUtils.copyProperties(driver, driverDto);
-        return driverDto;
-    }
-
-    @Override
-    public Driver convertToEntity(DriverDto driverDto) {
-        Driver driver = new Driver();
-        BeanUtils.copyProperties(driverDto, driver);
-        return driver;
     }
 
     public void updateDriver(Long id, MultipartFile multipartFile) {

@@ -1,35 +1,31 @@
+
 package pl.dawid.transportapp.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.dawid.transportapp.enums.DrivingLicenseCategory;
 
-import javax.persistence.*;
-import java.util.Optional;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Driver {
+public class Driver extends Employee{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Driver(String pesel, String firstName, String lastName, String imageName, DrivingLicenseCategory drivingLicense) {
+        super(pesel, firstName, lastName, imageName);
+        this.drivingLicense = drivingLicense;
+    }
 
-    @Column(nullable = false, unique = true, length = 12)
-    private String pesel;
+    @Enumerated(EnumType.STRING)
+    private DrivingLicenseCategory drivingLicense;
 
-    @Column(nullable = false)
-    private String firstName;
-
-    @Column(nullable = false)
-    private String lastName;
-
-    private String imageName;
-
-    public Driver(String pesel, String firstName, String lastName) {
-        this.pesel = pesel;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    @Override
+    public String toString() {
+        return super.toString() + " Driver{" +
+                "drivingLicense=" + drivingLicense +
+                '}';
     }
 }

@@ -60,7 +60,7 @@ public class DriverController {
         return ResponseEntity.created(location).build();
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PutMapping(ID_PATH)
     public ResponseEntity updateDriver(@Valid @RequestBody DriverDto driverDto, @PathVariable Long id) {    //TODO testy
         service.update(driverDto, id);

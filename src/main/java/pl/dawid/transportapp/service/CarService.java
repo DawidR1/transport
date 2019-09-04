@@ -1,6 +1,5 @@
 package pl.dawid.transportapp.service;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +26,12 @@ public class CarService implements DtoConverter<CarDto, Car> {
 
     public Optional<CarDto> findById(long id) {
         return repository.findById(id)
-                .map(this::convertToDto);
+                .map(entity -> convertToDto(entity, new CarDto()));
     }
 
     public List<CarDto> findAll() {
         return repository.findAll().stream()
-                .map(this::convertToDto)
+                .map(entity -> convertToDto(entity, new CarDto()))
                 .collect(toList());
     }
 
@@ -42,7 +41,7 @@ public class CarService implements DtoConverter<CarDto, Car> {
                 .ifPresent((car) -> {
                     throw new ExistInDataBase("Car with plate: " + car.getPlate() + " already exist");
                 });
-        Car car = convertToEntity(carDto);
+        Car car = convertToEntity(carDto, new Car());
         repository.save(car);
         return car.getId();
     }
@@ -63,21 +62,7 @@ public class CarService implements DtoConverter<CarDto, Car> {
             }
         });
         carDto.setId(id);
-        Car car = convertToEntity(carDto);
+        Car car = convertToEntity(carDto, new Car());
         repository.save(car);
-    }
-
-    @Override
-    public CarDto convertToDto(Car car) {
-        CarDto carDto = new CarDto();
-        BeanUtils.copyProperties(car, carDto);
-        return carDto;
-    }
-
-    @Override
-    public Car convertToEntity(CarDto carDto) {
-        Car car = new Car();
-        BeanUtils.copyProperties(carDto, car);
-        return car;
     }
 }

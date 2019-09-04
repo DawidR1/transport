@@ -52,7 +52,7 @@ public class CarController {
         return new Resources<>(resourceList, link);
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PostMapping
     public ResponseEntity postCar(@Valid @RequestBody CarDto carDto) {
         Long id = service.addCar(carDto);
@@ -60,7 +60,7 @@ public class CarController {
         return ResponseEntity.created(location).build();
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location" )
     @PutMapping(ID_PATH)
     public ResponseEntity updateCar(@Valid @RequestBody CarDto carDto, @PathVariable Long id) {
         service.update(carDto, id);
