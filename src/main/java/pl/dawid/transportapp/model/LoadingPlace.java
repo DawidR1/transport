@@ -1,5 +1,6 @@
 package pl.dawid.transportapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +30,7 @@ public class LoadingPlace {
     private LocalDate date;
 
     @OneToMany
+    @JsonIgnore
     private List<Cargo> cargo = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL)

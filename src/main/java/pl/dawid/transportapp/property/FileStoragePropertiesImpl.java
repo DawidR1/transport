@@ -1,9 +1,11 @@
 package pl.dawid.transportapp.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(prefix = "file")
-public class FileStorageProperties { //TODO interface
+@Component
+public class FileStoragePropertiesImpl { //TODO interface
 
     private String uploadDir;
 

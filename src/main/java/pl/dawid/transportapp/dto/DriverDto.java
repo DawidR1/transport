@@ -1,13 +1,21 @@
 package pl.dawid.transportapp.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import pl.dawid.transportapp.enums.DrivingLicenseCategory;
 import pl.dawid.transportapp.validator.PeselMatches;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
+
+import static pl.dawid.transportapp.util.Mappings.DATE_FORMAT;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class DriverDto {
 
     private Long id;
@@ -23,10 +31,12 @@ public class DriverDto {
 
     private String imageName;
 
-    public DriverDto(Long id, String pesel, String firstName, String lastName) {
-        this.id = id;
-        this.pesel = pesel;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
+    @Email
+    private String email;
+
+    private DrivingLicenseCategory drivingLicense;
+
+    @DateTimeFormat(pattern = DATE_FORMAT)
+    private LocalDate birth;
+
 }

@@ -1,8 +1,12 @@
 package pl.dawid.transportapp.model;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+
+import static pl.dawid.transportapp.util.Mappings.DATE_FORMAT;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -24,13 +28,20 @@ public abstract class Employee {
 
     private String imageName;
 
+    private String email;
+
+    @DateTimeFormat(pattern = DATE_FORMAT)
+    private LocalDate birth;
+
     public Employee() {
     }
 
-    public Employee(String pesel, String firstName, String lastName, String imageName) {
+    public Employee(String pesel, String firstName, String lastName, String imageName, String email, LocalDate birth) {
         this.pesel = pesel;
         this.firstName = firstName;
         this.lastName = lastName;
         this.imageName = imageName;
+        this.email = email;
+        this.birth = birth;
     }
 }

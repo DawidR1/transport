@@ -43,7 +43,7 @@ class DriverControllerTest {
         driver2.setId(2L);
         List<DriverDto> fakeDrivers = Arrays.asList(driver, driver2);
         when(service.findAll()).thenReturn(fakeDrivers);
-        when(service.findById(anyLong())).thenReturn(Optional.of(fakeDrivers.get(0)));
+        when(service.findDtoById(anyLong())).thenReturn(Optional.of(fakeDrivers.get(0)));
         when(service.addDriver(anyObject())).thenReturn(1L);
     }
 
@@ -70,7 +70,7 @@ class DriverControllerTest {
 
     @Test
     void shouldReturn404WhenDriverNotExists() throws Exception {
-        when(service.findById(anyLong())).thenReturn(Optional.empty());
+        when(service.findDtoById(anyLong())).thenReturn(Optional.empty());
         mvc.perform(get("/driver/4"))
                 .andExpect(status().isNotFound());
     }

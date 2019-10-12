@@ -28,6 +28,7 @@ public class DriverController {
 
     private final DriverService service;
 
+
     @Autowired
     public DriverController(DriverService service) {
         this.service = service;
@@ -36,7 +37,7 @@ public class DriverController {
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<DriverDto> getDriverById(@PathVariable Long id) {
-        return service.findById(id)
+        return service.findDtoById(id)
                 .map(this::mapToResourceWithLink)
                 .orElseThrow(() -> new NotFoundException("Driver with id= " + id + " not found"));
     }

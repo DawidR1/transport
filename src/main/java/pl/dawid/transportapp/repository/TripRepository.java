@@ -1,14 +1,24 @@
 package pl.dawid.transportapp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import pl.dawid.transportapp.model.Employee;
 import pl.dawid.transportapp.model.Trip;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 public interface TripRepository extends JpaRepository<Trip, Long> {
 
+
+    List<Trip> findAllByEmployeeAndDateStartBetween(Employee employee, LocalDate startDate, LocalDate endDate);
+
+    List<Trip> findAllByEmployeeOrderByDateStartDesc(Employee employee);
+
+
+    @Query("select trip from Trip trip left join fetch trip.loadingPlaces where trip.id = :id")
+    Optional<Trip> findByIdWithLoadingPlaces(Long id);
     //FIXME
-//    @Query("select trip.id,trip.destination,trip.dateStart,trip.dateFinish,trip.placeFinish,trip.status from Trip trip where trip.id = :id")
-//    public Optional<Trip> getNarrowTrip(Long id);
-//
-//    @Query("select trip.id,trip.destination,trip.dateStart,trip.dateFinish,trip.placeFinish,trip.status from Trip trip")
-//    public List<Trip> getAllNarrowTrip();
+
 }

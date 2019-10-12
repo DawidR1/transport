@@ -7,7 +7,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dawid.transportapp.exception.file.FileStorageException;
 import pl.dawid.transportapp.exception.file.MyFileNotFoundException;
-import pl.dawid.transportapp.property.FileStorageProperties;
+import pl.dawid.transportapp.property.FileStoragePropertiesImpl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -22,8 +22,8 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
+    public FileStorageService(FileStoragePropertiesImpl fileStoragePropertiesImpl) {
+        this.fileStorageLocation = Paths.get(fileStoragePropertiesImpl.getUploadDir()).toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
@@ -50,11 +50,15 @@ public class FileStorageService {
 
     public Optional<Resource> loadFileAsResource(String fileName) {
         try {
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Path filePath = getPathFile(fileName);
             Resource resource = new UrlResource(filePath.toUri());
             return resource.exists() ? Optional.of(resource) : Optional.empty();
         } catch (MalformedURLException ex) {
             throw new MyFileNotFoundException("File not found " + fileName, ex);
         }
+    }
+
+    public Path getPathFile(String fileName) {
+        return this.fileStorageLocation.resolve(fileName).normalize(); //FIXME null
     }
 }

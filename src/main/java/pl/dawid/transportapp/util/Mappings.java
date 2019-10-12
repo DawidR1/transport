@@ -8,4 +8,6 @@ public class Mappings {
     public static final String CROSS_ORIGIN_LOCAL_FRONT = "http://localhost:4200";
     public static final String TRIP_URL = "/trip";
     public static final String TRIP_NARROW_URL = TRIP_URL + "/narrow";
+    public static final String SETTLEMENT_URL = "/settlement";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 }

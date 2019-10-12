@@ -8,14 +8,16 @@ import pl.dawid.transportapp.enums.DrivingLicenseCategory;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Driver extends Employee{
+public class Driver extends Employee {
 
-    public Driver(String pesel, String firstName, String lastName, String imageName, DrivingLicenseCategory drivingLicense) {
-        super(pesel, firstName, lastName, imageName);
+    public Driver(String pesel, String firstName, String lastName, String imageName, String email, LocalDate birth,
+                  DrivingLicenseCategory drivingLicense) {
+        super(pesel, firstName, lastName, imageName, email, birth);
         this.drivingLicense = drivingLicense;
     }
 

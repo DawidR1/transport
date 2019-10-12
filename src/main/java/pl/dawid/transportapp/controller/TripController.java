@@ -50,7 +50,7 @@ public class TripController {
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = TRIP_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<TripDto> getTripById(@PathVariable Long id) {
-        return service.getDtoById(id)
+        return service.getDtoByIdWithLoadingPlaces(id)
                 .map(this::mapToResourceWithLink)
                 .orElseThrow(() -> new NotFoundException("Trip with id= " + id + " not found"));
     }

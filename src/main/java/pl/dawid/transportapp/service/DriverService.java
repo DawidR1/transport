@@ -27,10 +27,15 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
         this.storeFile = storeFile;
     }
 
-    public Optional<DriverDto> findById(long id) {
+    public Optional<DriverDto> findDtoById(long id) {
         return repository.findById(id)
                 .map(entity -> convertToDto(entity, new DriverDto()));
     }
+
+    public Optional<Driver> findById(long id) {
+        return repository.findById(id);
+    }
+
 
     public List<DriverDto> findAll() {
         return repository.findAll().stream()

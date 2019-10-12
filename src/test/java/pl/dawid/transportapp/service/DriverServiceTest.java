@@ -51,7 +51,7 @@ class DriverServiceTest {
 
     @Test
     void shouldFindAndMapToDtoWhenRequest() {
-        Optional<DriverDto> driverDto = driverService.findById(1L);
+        Optional<DriverDto> driverDto = driverService.findDtoById(1L);
 
         assertEquals(fakeDrivers.get(0).getId(), driverDto.get().getId());
     }

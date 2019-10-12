@@ -7,6 +7,8 @@ import pl.dawid.transportapp.dto.TripViewDto;
 import pl.dawid.transportapp.model.Trip;
 import pl.dawid.transportapp.repository.TripRepository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +24,8 @@ public class TripService implements DtoConverter<TripDto, Trip> {
         this.repository = tripRepository;
     }
 
-    public Optional<TripDto> getDtoById(long id) {
-        return repository.findById(id)
+    public Optional<TripDto> getDtoByIdWithLoadingPlaces(long id) {
+        return repository.findByIdWithLoadingPlaces(id) //TODO dorobic zaciaganie loading places
                 .map(entity -> convertToDto(entity, new TripViewDto()));
     }
 
