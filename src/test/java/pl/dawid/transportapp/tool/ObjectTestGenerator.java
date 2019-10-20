@@ -2,7 +2,7 @@ package pl.dawid.transportapp.tool;
 
 import pl.dawid.transportapp.dto.CarDto;
 import pl.dawid.transportapp.dto.DriverDto;
-import pl.dawid.transportapp.dto.TripViewDto;
+import pl.dawid.transportapp.dto.TripDto;
 import pl.dawid.transportapp.enums.DrivingLicenseCategory;
 import pl.dawid.transportapp.enums.TripStatus;
 import pl.dawid.transportapp.model.Car;
@@ -102,8 +102,8 @@ public class ObjectTestGenerator {
         return trip;
     }
 
-    public static TripViewDto getCorrectTripViewDto(int number) {
-        TripViewDto trip = new TripViewDto();
+    public static TripDto getCorrectTripViewDto(int number) {
+        TripDto trip = new TripDto();
         trip.setCar(getCorrectCar(1));
         trip.setEmployee(getCorrectDriver(1));
         trip.setDateStart(LocalDate.of(2000, Month.JANUARY, 1));

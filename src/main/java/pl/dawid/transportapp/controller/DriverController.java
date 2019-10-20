@@ -12,10 +12,12 @@ import pl.dawid.transportapp.controller.tool.LocationCreator;
 import pl.dawid.transportapp.dto.DriverDto;
 import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.service.DriverService;
+import pl.dawid.transportapp.util.Mappings;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -68,6 +70,14 @@ public class DriverController {
         URI location = LocationCreator.getLocation(DRIVER_URL, id);
         ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.ok();
         return bodyBuilder.location(location).build();
+    }
+
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @GetMapping(path ="/narrow", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<Map<Long, String>> getAllDriversIdByName() {
+        Map<Long, String> resourceList = service.getIdByName();
+        return ResponseEntity.ok(resourceList);
     }
 
     @DeleteMapping(ID_PATH) //FIXME remove entity with picture

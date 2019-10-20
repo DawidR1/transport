@@ -1,6 +1,7 @@
 package pl.dawid.transportapp.service.settlement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import pl.dawid.transportapp.dto.DriverDto;
 import pl.dawid.transportapp.dto.ReportDriver;
@@ -19,7 +20,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-public class ReportDriverCreator implements ReportCreator {
+@Qualifier("driverReport")
+public class ReportDriverCreator {
 
     private final TripRepository tripRepository;
     private final TripService tripService;
@@ -32,7 +34,6 @@ public class ReportDriverCreator implements ReportCreator {
         this.driverService = driverService;
     }
 
-    @Override
     public ReportDriver createReport(long id, LocalDate startDate, LocalDate endDate) {
         Driver driver = driverService.findById(id).orElseThrow(() -> new NotFoundException("cannot found driver with id: " + id));
         List<Trip> trips = tripRepository.findAllByEmployeeAndDateStartBetween(driver, startDate, endDate);
@@ -56,18 +57,5 @@ public class ReportDriverCreator implements ReportCreator {
         report.setStart(startDate);
         report.setEnd(endDate);
         return report;
-    }
-
-    @Override
-    public ReportDriver createReport(long id) {
-        Driver driver = driverService.findById(id).orElseThrow(() -> new NotFoundException("cannot found driver with id: " + id));
-        List<Trip> trips = tripRepository.findAllByEmployeeOrderByDateStartDesc(driver);
-        if (!trips.isEmpty()) {
-            LocalDate lastDate = trips.get(0).getDateStart();
-            LocalDate firstDate = trips.get(trips.size() - 1).getDateStart();
-            return getReport(trips, driver, firstDate, lastDate);
-        }else {
-            return getReport(trips, driver, null, null);
-        }
     }
 }

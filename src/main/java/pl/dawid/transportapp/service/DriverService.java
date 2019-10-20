@@ -1,5 +1,6 @@
 package pl.dawid.transportapp.service;
 
+import antlr.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +11,11 @@ import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.model.Driver;
 import pl.dawid.transportapp.repository.DriverRepository;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,7 +32,7 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
     }
 
     public Optional<DriverDto> findDtoById(long id) {
-        return repository.findById(id)
+        return findById(id)
                 .map(entity -> convertToDto(entity, new DriverDto()));
     }
 
@@ -41,6 +45,10 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
         return repository.findAll().stream()
                 .map(entity -> convertToDto(entity, new DriverDto()))
                 .collect(toList());
+    }
+
+    public List<Long> findAllId(){
+        return repository.findAllId();
     }
 
     @Transactional
@@ -80,5 +88,12 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
         String fileName = storeFile.storeFile(multipartFile, id);
         driver.setImageName(fileName);
         repository.save(driver);
+    }
+
+    public Map<Long, String> getIdByName() {
+        return repository.findAll().stream()
+                .collect(Collectors.toMap(
+                        Driver::getId,
+                        entity -> entity.getFirstName() + " " + entity.getLastName()));
     }
 }

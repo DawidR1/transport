@@ -16,6 +16,7 @@ import pl.dawid.transportapp.service.CarService;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -36,7 +37,7 @@ public class CarController {
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<CarDto> getCarById(@PathVariable Long id) {
-        return service.findById(id)
+        return service.findDtoById(id)
                 .map(this::mapToResourceWithLink)
                 .orElseThrow(() -> new NotFoundException("Car with id= " + id + " not found"));
     }
@@ -79,5 +80,13 @@ public class CarController {
         Resource<CarDto> resource = new Resource<>(car);
         resource.add(linkTo(methodOn(CarController.class).getCarById(car.getId())).withSelfRel());
         return resource;
+    }
+
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @GetMapping(path ="/narrow", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<Map<Long, String>> getAllDriversIdByName() {
+        Map<Long, String> resourceList = service.getIdByName();
+        return ResponseEntity.ok(resourceList);
     }
 }

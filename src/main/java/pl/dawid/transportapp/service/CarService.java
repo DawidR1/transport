@@ -10,7 +10,9 @@ import pl.dawid.transportapp.model.Car;
 import pl.dawid.transportapp.repository.CarRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -24,9 +26,13 @@ public class CarService implements DtoConverter<CarDto, Car> {
         this.repository = repository;
     }
 
-    public Optional<CarDto> findById(long id) {
+    public Optional<CarDto> findDtoById(long id) {
         return repository.findById(id)
                 .map(entity -> convertToDto(entity, new CarDto()));
+    }
+
+    public Optional<Car> findById(long id) {
+        return repository.findById(id);
     }
 
     public List<CarDto> findAll() {
@@ -64,5 +70,10 @@ public class CarService implements DtoConverter<CarDto, Car> {
         carDto.setId(id);
         Car car = convertToEntity(carDto, new Car());
         repository.save(car);
+    }
+
+    public Map<Long, String> getIdByName() {
+        return repository.findAll().stream()
+                .collect(Collectors.toMap(Car::getId, Car::getPlate));
     }
 }

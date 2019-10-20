@@ -1,7 +1,6 @@
 package pl.dawid.transportapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +42,7 @@ class CarControllerTest {
         List<CarDto> fakeCars = Arrays.asList(carDto,carDto2);
 
         when(service.findAll()).thenReturn(fakeCars);
-        when(service.findById(anyLong())).thenReturn(Optional.of(fakeCars.get(0)));
+        when(service.findDtoById(anyLong())).thenReturn(Optional.of(fakeCars.get(0)));
         when(service.addCar(anyObject())).thenReturn(1L);
     }
 
@@ -70,7 +69,7 @@ class CarControllerTest {
 
     @Test
     void shouldReturn404WhenCarNotExists() throws Exception {
-        when(service.findById(anyLong())).thenReturn(Optional.empty());
+        when(service.findDtoById(anyLong())).thenReturn(Optional.empty());
         mvc.perform(get("/car/4"))
                 .andExpect(status().isNotFound());
     }

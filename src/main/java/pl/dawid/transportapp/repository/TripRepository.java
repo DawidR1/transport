@@ -19,6 +19,11 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
 
     @Query("select trip from Trip trip left join fetch trip.loadingPlaces where trip.id = :id")
     Optional<Trip> findByIdWithLoadingPlaces(Long id);
-    //FIXME
 
+
+    @Query("select trip from Trip trip left join fetch trip.loadingPlaces where trip.id = :id and trip.dateStart between :firstDate and  :lastDate")
+    List<Trip> findWithLoadingPlaces(LocalDate firstDate, LocalDate lastDate);
+
+    @Query("select trip from Trip trip left join fetch trip.loadingPlaces")
+    List<Trip> findWithLoadingPlaces();
 }

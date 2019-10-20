@@ -1,43 +1,58 @@
 package pl.dawid.transportapp.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.dawid.transportapp.dto.Report;
+import pl.dawid.transportapp.dto.ReportDriver;
+import pl.dawid.transportapp.dto.TripReport;
 import pl.dawid.transportapp.enums.Format;
-import pl.dawid.transportapp.service.settlement.FormatCreator;
-import pl.dawid.transportapp.service.settlement.ReportService;
+import pl.dawid.transportapp.service.settlement.PDFCreator;
+import pl.dawid.transportapp.service.settlement.PdfCompanyCreator;
+import pl.dawid.transportapp.service.settlement.PdfDriverCreator;
+import pl.dawid.transportapp.service.settlement.ReportServiceImpl;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static pl.dawid.transportapp.util.Mappings.*;
 
 @RestController
 public class ReportController {
-    private final ReportService reportService;
-    private final FormatCreator formatCreator;
 
-    public ReportController(ReportService reportService, FormatCreator formatCreator) {
+
+    private final ReportServiceImpl reportService;
+    private final PdfDriverCreator driverPdfCreator;
+    private final PdfCompanyCreator companyPdfCreator;
+
+    @Autowired
+    public ReportController(ReportServiceImpl reportService, PdfDriverCreator driverPdfCreator
+            , PdfCompanyCreator companyPdfCreator) {
         this.reportService = reportService;
-        this.formatCreator = formatCreator;
+        this.driverPdfCreator = driverPdfCreator;
+        this.companyPdfCreator = companyPdfCreator;
     }
 
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(path = ID_PATH + SETTLEMENT_URL)
-    public ResponseEntity getReportDriverById(@PathVariable Long id, @RequestParam Optional<LocalDate> start, @RequestParam Optional<LocalDate> end, @RequestParam Format format) {
-        Report report = null;
-        if (start.isPresent() && end.isPresent()) {
-            report = reportService.generateReport(id, start.get(), end.get());
-        } else {
-            report = reportService.generateReport(id);
-        }
-        return format.equals(Format.PDF) ? convertToResponsePdf(report) : ResponseEntity.ok(report);
+    @GetMapping(path = DRIVER_URL + ID_PATH + REPORT_URL)
+    public ResponseEntity getReportDriverById(@PathVariable Long id, @RequestParam LocalDate start,
+                                              @RequestParam LocalDate end, @RequestParam Format format) {
+        ReportDriver report = reportService.generateReportForDriver(id, start, end);
+        driverPdfCreator.setReportDriver(report);
+        return format.equals(Format.PDF) ? convertToResponsePdf(driverPdfCreator) : ResponseEntity.ok(report);
     }
 
-    private ResponseEntity convertToResponsePdf(Report report) {
+    private ResponseEntity convertToResponsePdf(PDFCreator format) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(reportService.generateReportInFormat(report, formatCreator).toByteArray());
+                .body(reportService.generateReportInPdf(format).toByteArray());
+    }
+
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @GetMapping(path = COMPANY_URL + REPORT_URL)
+    public ResponseEntity getReportCompanyById(@RequestParam LocalDate start, @RequestParam LocalDate end,
+                                               @RequestParam Format format) {
+        TripReport report = reportService.generateReportForCompany(start, end);
+        companyPdfCreator.setTripReport(report);
+        return format.equals(Format.PDF) ? convertToResponsePdf(companyPdfCreator) : ResponseEntity.ok(report);
     }
 }

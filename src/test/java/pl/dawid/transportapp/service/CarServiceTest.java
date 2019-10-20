@@ -49,7 +49,7 @@ class CarServiceTest {
 
     @Test
     void shouldFindAndMapToDtoWhenRequest() {
-        Optional<CarDto> carDto = carService.findById(1L);
+        Optional<CarDto> carDto = carService.findDtoById(1L);
 
         assertEquals(fakeCars.get(0).getId(), carDto.get().getId());
     }

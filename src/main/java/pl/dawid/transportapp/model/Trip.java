@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import pl.dawid.transportapp.enums.TripStatus;
+import pl.dawid.transportapp.util.Mappings;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -32,14 +33,14 @@ public class Trip {
     private Location destination;
 
     @Column(name = "start_date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = Mappings.DATE_FORMAT)
     private LocalDate dateStart;
 
     @Column(name = "finish_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = Mappings.DATE_FORMAT)
     private LocalDate dateFinish;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<LoadingPlace> loadingPlaces;
 
     @OneToOne
@@ -82,4 +83,5 @@ public class Trip {
                 '}';
     }
 }
+
 

@@ -6,6 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @FunctionalInterface
-public interface FormatCreator {
-    ByteArrayOutputStream create(Report report) throws IOException;
+public interface PDFCreator {
+    ByteArrayOutputStream create() throws IOException;
 }
