@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class Cargo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE , generator = "seq_cou")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private int numberOfPallets;

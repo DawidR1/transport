@@ -1,4 +1,4 @@
-package pl.dawid.transportapp.service.settlement;
+package pl.dawid.transportapp.service.report;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,7 +36,7 @@ public class ReportDriverCreator {
 
     public ReportDriver createReport(long id, LocalDate startDate, LocalDate endDate) {
         Driver driver = driverService.findById(id).orElseThrow(() -> new NotFoundException("cannot found driver with id: " + id));
-        List<Trip> trips = tripRepository.findAllByEmployeeAndDateStartBetween(driver, startDate, endDate);
+        List<Trip> trips = tripRepository.findAllByDriverAndDateStartBetween(driver, startDate, endDate);
         return getReport(trips, driver, startDate, endDate);
     }
 

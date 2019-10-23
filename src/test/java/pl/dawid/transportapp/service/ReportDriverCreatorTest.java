@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.dawid.transportapp.dto.ReportDriver;
 import pl.dawid.transportapp.repository.TripRepository;
-import pl.dawid.transportapp.service.settlement.ReportDriverCreator;
+import pl.dawid.transportapp.service.report.ReportDriverCreator;
 import pl.dawid.transportapp.tool.ObjectTestGenerator;
 
 import java.math.BigDecimal;
@@ -37,7 +37,7 @@ class ReportDriverCreatorTest {
     void init() {
         when(driverService.findById(anyLong()))
                 .thenReturn(Optional.of(ObjectTestGenerator.getCorrectDriver(1)));
-        when(tripRepository.findAllByEmployeeAndDateStartBetween(any(), any(), any()))
+        when(tripRepository.findAllByDriverAndDateStartBetween(any(), any(), any()))
                 .thenReturn(Arrays.asList(ObjectTestGenerator.getCorrectTrip(1), ObjectTestGenerator.getCorrectTrip(2)));
     }
 

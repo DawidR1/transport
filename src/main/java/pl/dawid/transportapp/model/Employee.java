@@ -9,8 +9,8 @@ import java.time.LocalDate;
 import static pl.dawid.transportapp.util.Mappings.DATE_FORMAT;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 @Data
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Employee {
 
     @Id

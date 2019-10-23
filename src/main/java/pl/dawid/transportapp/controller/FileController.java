@@ -10,6 +10,7 @@ import pl.dawid.transportapp.service.DriverService;
 import pl.dawid.transportapp.service.FileStorageService;
 import pl.dawid.transportapp.util.Mappings;
 
+import static pl.dawid.transportapp.util.Mappings.*;
 import static pl.dawid.transportapp.util.Mappings.FILE_URL;
 
 @RestController
@@ -25,15 +26,15 @@ public class FileController {
         this.service = service;
     }
 
-    @CrossOrigin(Mappings.CROSS_ORIGIN_LOCAL_FRONT)
-    @PostMapping("/driver/{id}")
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @PostMapping(DRIVER_URL + ID_PATH)
     public ResponseEntity saveFile(@RequestParam("file") MultipartFile multipartFile,
                                    @PathVariable Long id) {
         service.updateDriver(id, multipartFile);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{path}")
+    @GetMapping(PATH_URL)
     public ResponseEntity<Resource> getFile(@PathVariable String path) {
         return fileStorageService.loadFileAsResource(path)
                 .map(resource -> ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource))

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import pl.dawid.transportapp.util.Mappings;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -25,12 +26,11 @@ public class LoadingPlace {
     @Column(nullable = false)
     private int nr;
 
-    @Column(name = "date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(nullable = false)
+    @DateTimeFormat(pattern = Mappings.DATE_FORMAT)
     private LocalDate date;
 
-    @OneToMany
-    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Cargo> cargo = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL)

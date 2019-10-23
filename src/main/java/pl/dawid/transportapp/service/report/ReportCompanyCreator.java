@@ -1,4 +1,4 @@
-package pl.dawid.transportapp.service.settlement;
+package pl.dawid.transportapp.service.report;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

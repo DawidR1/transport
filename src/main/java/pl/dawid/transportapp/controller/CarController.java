@@ -61,7 +61,7 @@ public class CarController {
         return ResponseEntity.created(location).build();
     }
 
-    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location" )
+    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PutMapping(ID_PATH)
     public ResponseEntity updateCar(@Valid @RequestBody CarDto carDto, @PathVariable Long id) {
         service.update(carDto, id);
@@ -80,13 +80,5 @@ public class CarController {
         Resource<CarDto> resource = new Resource<>(car);
         resource.add(linkTo(methodOn(CarController.class).getCarById(car.getId())).withSelfRel());
         return resource;
-    }
-
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(path ="/narrow", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<Map<Long, String>> getAllDriversIdByName() {
-        Map<Long, String> resourceList = service.getIdByName();
-        return ResponseEntity.ok(resourceList);
     }
 }

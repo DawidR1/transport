@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PeselMatchesValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PeselMatches {
-    String message() default "{pl/dawid/transportapp/validator/PeselMatches}";
+    String message() default "{pl.dawid.transportapp.validator.PeselMatches}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

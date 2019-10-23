@@ -2,6 +2,7 @@ package pl.dawid.transportapp.tool;
 
 import pl.dawid.transportapp.dto.CarDto;
 import pl.dawid.transportapp.dto.DriverDto;
+import pl.dawid.transportapp.dto.LocationDto;
 import pl.dawid.transportapp.dto.TripDto;
 import pl.dawid.transportapp.enums.DrivingLicenseCategory;
 import pl.dawid.transportapp.enums.TripStatus;
@@ -84,11 +85,20 @@ public class ObjectTestGenerator {
         location.setStreetAddress("mainRoad");
         return location;
     }
+    private static LocationDto getCorrectLocationDto(int number) {
+        LocationDto location = new LocationDto();
+        location.setCity("Katowice");
+        location.setCountry("Poland");
+        location.setId((long) number);
+        location.setPostalCode("PostalCode");
+        location.setStreetAddress("mainRoad");
+        return location;
+    }
 
     public static Trip getCorrectTrip(int number) {
         Trip trip = new Trip();
         trip.setCar(getCorrectCar(1));
-        trip.setEmployee(getCorrectDriver(1));
+        trip.setDriver(getCorrectDriver(1));
         trip.setDateStart(LocalDate.of(2000, Month.JANUARY, 1));
         trip.setDateFinish(LocalDate.of(2001, Month.JANUARY, 1));
         trip.setId((long) number);
@@ -104,18 +114,20 @@ public class ObjectTestGenerator {
 
     public static TripDto getCorrectTripViewDto(int number) {
         TripDto trip = new TripDto();
-        trip.setCar(getCorrectCar(1));
-        trip.setEmployee(getCorrectDriver(1));
+        trip.setCar(getCorrectCarDto(1));
+        trip.setDriver(getCorrectDriverDto(1));
         trip.setDateStart(LocalDate.of(2000, Month.JANUARY, 1));
         trip.setDateFinish(LocalDate.of(2001, Month.JANUARY, 1));
         trip.setId((long) number);
         trip.setIncome(BigDecimal.ZERO);
-        trip.setPlaceFinish(getCorrectLocation(1));
-        trip.setPlaceStart(getCorrectLocation(2));
-        trip.setDestination(getCorrectLocation(3));
+        trip.setPlaceFinish(getCorrectLocationDto(1));
+        trip.setPlaceStart(getCorrectLocationDto(2));
+        trip.setDestination(getCorrectLocationDto(3));
         trip.setStatus(TripStatus.IN_PROGRESS);
         trip.setFuel(10);
         trip.setDriverSalary(BigDecimal.valueOf(100));
         return trip;
     }
+
+
 }

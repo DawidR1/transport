@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(prefix = "file")
 @Component
-public class FileStoragePropertiesImpl { //TODO interface
+public class FileStoragePropertiesImpl {
 
     private String uploadDir;
 

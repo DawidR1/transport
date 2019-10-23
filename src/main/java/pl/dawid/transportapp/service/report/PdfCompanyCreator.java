@@ -1,4 +1,4 @@
-package pl.dawid.transportapp.service.settlement;
+package pl.dawid.transportapp.service.report;
 
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -8,7 +8,6 @@ import com.itextpdf.layout.border.SolidBorder;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import pl.dawid.transportapp.dto.*;
@@ -17,7 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static pl.dawid.transportapp.service.settlement.tool.ReportConst.*;
+import static pl.dawid.transportapp.service.report.tool.ReportConst.*;
 
 @Component
 @Qualifier("companyPdf")

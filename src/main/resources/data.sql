@@ -12,10 +12,18 @@ INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (1, 4, 50
 
 INSERT INTO loading_place (id, nr, date, location_id) VALUES (1, 1, '2010-10-11', 1);
 
-insert into loading_place_cargo (loading_place_id,cargo_id) values (1,1);
 
-INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,employee_id,
+INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
 status,cost,fuel,distance) VALUES (1,'500',1,2, 2,'2010-10-11','2010-11-11',1, 1,'IN_PROGRESS',200,50,20);
-INSERT INTO trip_loading_places (trip_id,loading_places_id) values (1,1)
+INSERT INTO trip_loading_places (trip_id,loading_places_id) values (1,1);
+
+INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (2, 4, 50, 'Google');
+INSERT INTO loading_place (id, nr, date, location_id) VALUES (2, 1, '2010-10-11', 1);
+insert into loading_place_cargo (loading_place_id,cargo_id) values (2,2);
+--
+INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
+status,cost,fuel,distance) VALUES (2,'300',1,2, 2,'2010-10-11','2010-11-11',2, 2,'IN_PROGRESS',200,50,20);
+INSERT INTO trip_loading_places (trip_id,loading_places_id) values (2,2);
+
 
 

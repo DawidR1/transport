@@ -12,7 +12,6 @@ import pl.dawid.transportapp.controller.tool.LocationCreator;
 import pl.dawid.transportapp.dto.DriverDto;
 import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.service.DriverService;
-import pl.dawid.transportapp.util.Mappings;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -65,25 +64,11 @@ public class DriverController {
 
     @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PutMapping(ID_PATH)
-    public ResponseEntity updateDriver(@Valid @RequestBody DriverDto driverDto, @PathVariable Long id) {    //TODO testy
+    public ResponseEntity updateDriver(@Valid @RequestBody DriverDto driverDto, @PathVariable Long id) {
         service.update(driverDto, id);
         URI location = LocationCreator.getLocation(DRIVER_URL, id);
         ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.ok();
         return bodyBuilder.location(location).build();
-    }
-
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(path ="/narrow", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<Map<Long, String>> getAllDriversIdByName() {
-        Map<Long, String> resourceList = service.getIdByName();
-        return ResponseEntity.ok(resourceList);
-    }
-
-    @DeleteMapping(ID_PATH) //FIXME remove entity with picture
-    public ResponseEntity deleteDriver(@PathVariable Long id) {
-        service.removeDriver(id);
-        return ResponseEntity.ok().build();
     }
 
     private Resource<DriverDto> mapToResourceWithLink(DriverDto driver) {

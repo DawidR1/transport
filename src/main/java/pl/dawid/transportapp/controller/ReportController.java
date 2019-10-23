@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import pl.dawid.transportapp.dto.ReportDriver;
 import pl.dawid.transportapp.dto.TripReport;
 import pl.dawid.transportapp.enums.Format;
-import pl.dawid.transportapp.service.settlement.PDFCreator;
-import pl.dawid.transportapp.service.settlement.PdfCompanyCreator;
-import pl.dawid.transportapp.service.settlement.PdfDriverCreator;
-import pl.dawid.transportapp.service.settlement.ReportServiceImpl;
+import pl.dawid.transportapp.service.report.PDFCreator;
+import pl.dawid.transportapp.service.report.PdfCompanyCreator;
+import pl.dawid.transportapp.service.report.PdfDriverCreator;
+import pl.dawid.transportapp.service.report.ReportServiceImpl;
 
 import java.time.LocalDate;
 
@@ -41,12 +41,6 @@ public class ReportController {
         return format.equals(Format.PDF) ? convertToResponsePdf(driverPdfCreator) : ResponseEntity.ok(report);
     }
 
-    private ResponseEntity convertToResponsePdf(PDFCreator format) {
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(reportService.generateReportInPdf(format).toByteArray());
-    }
-
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = COMPANY_URL + REPORT_URL)
     public ResponseEntity getReportCompanyById(@RequestParam LocalDate start, @RequestParam LocalDate end,
@@ -54,5 +48,11 @@ public class ReportController {
         TripReport report = reportService.generateReportForCompany(start, end);
         companyPdfCreator.setTripReport(report);
         return format.equals(Format.PDF) ? convertToResponsePdf(companyPdfCreator) : ResponseEntity.ok(report);
+    }
+
+    private ResponseEntity convertToResponsePdf(PDFCreator format) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(reportService.generateReportInPdf(format).toByteArray());
     }
 }

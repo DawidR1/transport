@@ -1,11 +1,10 @@
-package pl.dawid.transportapp.service.settlement;
-
-import pl.dawid.transportapp.dto.Report;
+package pl.dawid.transportapp.service.report;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @FunctionalInterface
 public interface PDFCreator {
+
     ByteArrayOutputStream create() throws IOException;
 }

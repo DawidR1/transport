@@ -5,12 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import pl.dawid.transportapp.enums.TripStatus;
-import pl.dawid.transportapp.model.Car;
-import pl.dawid.transportapp.model.Employee;
-import pl.dawid.transportapp.model.LoadingPlace;
-import pl.dawid.transportapp.model.Location;
 import pl.dawid.transportapp.util.Mappings;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,30 +18,52 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TripDto {
 
-    private TripStatus status;
     private Long id;
-    private Location destination;
+
+    @NotNull
+    private TripStatus status; //FIXME dorobic optional
+
+    @NotNull
+    private LocationDto destination;
+
+    @NotNull
     @DateTimeFormat(pattern = Mappings.DATE_FORMAT)
     private LocalDate dateStart;
+
     @DateTimeFormat(pattern = Mappings.DATE_FORMAT)
     private LocalDate dateFinish;
-    private Location placeFinish;
-    private Car car;
-    private Employee employee;
+
+    private LocationDto placeFinish;
+
+    @NotNull
+    private CarDto car;
+
+    @NotNull
+    private DriverDto driver;
+
     private BigDecimal income;
+
+    @NotNull
     @DateTimeFormat(pattern = Mappings.DATE_FORMAT)
-    private Location placeStart;
-    private List<LoadingPlace> loadingPlaces;
+    private LocationDto placeStart;
+
+    private List<LoadingPlaceDto> loadingPlaces;
+
     private Integer distance;
+
     private BigDecimal cost;
+
     private Integer fuel;
+
     private BigDecimal driverSalary;
 
-    public Optional<Location> getPlaceFinish() {
+    public Optional<LocationDto> getPlaceFinish() {
         return Optional.ofNullable(placeFinish);
     }
 
     public Optional<BigDecimal> getDriverSalary() {
         return Optional.ofNullable(driverSalary);
     }
+
+
 }

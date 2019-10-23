@@ -13,6 +13,6 @@ public class Mappings {
     public static final String COMPANY_URL = "company";
     public static final String DRIVER_REPORT = "driverReport";
     public static final String COMPANY_REPORT = "companyReport";
-
+    public static final String PATH_URL = "/{path}";
     public static final String LOCATION_URL = "location";
 }

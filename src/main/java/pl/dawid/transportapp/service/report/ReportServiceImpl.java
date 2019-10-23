@@ -1,10 +1,10 @@
-package pl.dawid.transportapp.service.settlement;
+package pl.dawid.transportapp.service.report;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.dawid.transportapp.dto.ReportDriver;
 import pl.dawid.transportapp.dto.TripReport;
-import pl.dawid.transportapp.exception.NotFoundException;
+import pl.dawid.transportapp.exception.ReportGeneratorException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class ReportServiceImpl {
         try {
             return creator.create();
         } catch (IOException e) {
-            throw new NotFoundException("cos"); //FIXME dorobic
+            throw new ReportGeneratorException(e.getMessage());
         }
     }
 

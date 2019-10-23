@@ -9,7 +9,10 @@ import java.util.List;
 public class ReportDriver extends Report {
 
     private DriverDto driverDto;
+
     private int numberOfTrips;
+
     private List<TripDto> trips;
+
     private BigDecimal salary;
 }

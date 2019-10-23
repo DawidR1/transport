@@ -1,4 +1,4 @@
-package pl.dawid.transportapp.service.settlement.tool;
+package pl.dawid.transportapp.service.report.tool;
 
 public class ReportConst {
     public static final String NAME = "Name: ";

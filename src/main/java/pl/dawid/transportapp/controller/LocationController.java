@@ -9,17 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import pl.dawid.transportapp.dto.LocationDto;
 import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.service.LocationService;
-import pl.dawid.transportapp.util.Mappings;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-import static pl.dawid.transportapp.util.Mappings.CROSS_ORIGIN_LOCAL_FRONT;
+import static pl.dawid.transportapp.util.Mappings.*;
 
 @RestController
-@RequestMapping(Mappings.LOCATION_URL)
+@RequestMapping(LOCATION_URL)
 public class LocationController {
 
     private final LocationService service;
@@ -29,7 +28,7 @@ public class LocationController {
     }
 
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(path = Mappings.ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<LocationDto> getLocationById(@PathVariable Long id) {
         return service.findDtoById(id)
                 .map(this::mapToResourceWithLink)
@@ -43,17 +42,13 @@ public class LocationController {
         List<Resource> resourceList = service.findAll().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
-        Link link = linkTo(methodOn(LocationController.class)
-                .getAllLocations())
-                .withSelfRel();
+        Link link = linkTo(methodOn(LocationController.class).getAllLocations()).withSelfRel();
         return new Resources<>(resourceList, link);
     }
 
     private Resource<LocationDto> mapToResourceWithLink(LocationDto location) {
         Resource<LocationDto> resource = new Resource<>(location);
-        resource.add(linkTo(methodOn(LocationController.class)
-                .getLocationById(location.getId()))
-                .withSelfRel());
+        resource.add(linkTo(methodOn(LocationController.class).getLocationById(location.getId())).withSelfRel());
         return resource;
     }
 }

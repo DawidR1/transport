@@ -1,4 +1,4 @@
-package pl.dawid.transportapp.service.settlement;
+package pl.dawid.transportapp.service.report;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -23,7 +23,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import static pl.dawid.transportapp.service.settlement.tool.ReportConst.*;
+import static pl.dawid.transportapp.service.report.tool.ReportConst.*;
 
 @Component
 @Qualifier("driverPdf")

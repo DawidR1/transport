@@ -9,9 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.dawid.transportapp.controller.tool.LocationCreator;
-import pl.dawid.transportapp.dto.DriverDto;
 import pl.dawid.transportapp.dto.TripDto;
-import pl.dawid.transportapp.dto.TripPostDto;
 import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.service.TripService;
 
@@ -74,14 +72,22 @@ public class TripController {
 
     @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PostMapping(path = TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity postDriver(@Valid @RequestBody TripPostDto tripDto) {
+    public ResponseEntity postDriver(@Valid @RequestBody TripDto tripDto) {
+        Long id = service.addTrip(tripDto);
+        URI location = LocationCreator.getLocation(DRIVER_URL, id);
+        return ResponseEntity.created(location).build();
+    }
+
+    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
+    @PutMapping(path = TRIP_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateDriver(@Valid @RequestBody TripDto tripDto) {
         Long id = service.addTrip(tripDto);
         URI location = LocationCreator.getLocation(DRIVER_URL, id);
         return ResponseEntity.created(location).build();
     }
 
 
-    private Resource<TripDto> mapToResourceWithLink(TripDto tripDto) { //FIXME trzeba zrobic dla narrow i dla dto
+    private Resource<TripDto> mapToResourceWithLink(TripDto tripDto) {
         Resource<TripDto> resource = new Resource<>(tripDto);
         resource.add(linkTo(methodOn(TripController.class).getTripById(tripDto.getId())).withSelfRel());
         return resource;
