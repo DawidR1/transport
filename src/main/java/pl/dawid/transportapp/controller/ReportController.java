@@ -53,6 +53,6 @@ public class ReportController {
     private ResponseEntity convertToResponsePdf(PDFCreator format) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(reportService.generateReportInPdf(format).toByteArray());
+                .body(reportService.convertIntoPdf(format).toByteArray());
     }
 }

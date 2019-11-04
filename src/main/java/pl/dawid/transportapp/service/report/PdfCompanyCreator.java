@@ -10,7 +10,10 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import pl.dawid.transportapp.dto.*;
+import pl.dawid.transportapp.dto.DriverDto;
+import pl.dawid.transportapp.dto.ReportDriver;
+import pl.dawid.transportapp.dto.TripDto;
+import pl.dawid.transportapp.dto.TripReport;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -20,7 +23,7 @@ import static pl.dawid.transportapp.service.report.tool.ReportConst.*;
 
 @Component
 @Qualifier("companyPdf")
-public class PdfCompanyCreator implements PDFCreator{
+public class PdfCompanyCreator implements PDFCreator {
 
     private TripReport tripReport;
 
@@ -61,7 +64,7 @@ public class PdfCompanyCreator implements PDFCreator{
                     table.addCell(trip.getId().toString());
                     table.addCell(trip.getDestination().getCountry());
                     table.addCell(trip.getDateStart().toString());
-                    table.addCell(trip.getDateFinish().toString());
+                    trip.getDateFinish().ifPresentOrElse(date -> table.addCell(date.toString()), () -> table.addCell("Brak"));
                     table.addCell(trip.getStatus().toString());
                 });
         document.add(table);
@@ -103,8 +106,7 @@ public class PdfCompanyCreator implements PDFCreator{
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        StringBuilder content = new StringBuilder();
-        content
+        StringBuilder content = new StringBuilder()
                 .append(NAME)
                 .append(dto.getFirstName())
                 .append(" ")

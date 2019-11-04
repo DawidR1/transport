@@ -18,14 +18,15 @@ import java.util.stream.Collectors;
 @Qualifier(Mappings.COMPANY_REPORT)
 public class ReportCompanyCreator {
 
-    private ReportDriverCreator reportDriverCreator;
-    private DriverService driverService;
-
+    private final ReportDriverCreator reportDriverCreator;
+    private final DriverService driverService;
+    private final CompanyCalculator calculator;
 
     @Autowired
-    public ReportCompanyCreator(ReportDriverCreator reportDriverCreator, DriverService driverService) {
+    public ReportCompanyCreator(ReportDriverCreator reportDriverCreator, DriverService driverService, CompanyCalculator calculator) {
         this.reportDriverCreator = reportDriverCreator;
         this.driverService = driverService;
+        this.calculator = calculator;
     }
 
     public TripReport createReport(LocalDate startDate, LocalDate endDate) {
@@ -44,15 +45,14 @@ public class ReportCompanyCreator {
         report.setReportDrivers(reportDrivers);
 
         List<TripDto> tripDtos = reportDrivers.stream()
-                .flatMap(rep -> rep.getTrips().stream()).collect(Collectors.toList());
-        BigDecimal cost = tripDtos.stream().map(TripDto::getCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal companyIncome = tripDtos.stream()
-                .map(TripDto::getIncome)
-                .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .subtract(cost);
+                .flatMap(rep -> rep.getTrips().stream())
+                .collect(Collectors.toList());
+        BigDecimal companyIncome = calculator.calculateCompanyProfit(tripDtos);
         report.setCompanyIncome(companyIncome);
         report.setCompanyNumberOfTrips(tripDtos.size());
 
         return report;
     }
+
+
 }

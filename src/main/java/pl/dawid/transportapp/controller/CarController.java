@@ -1,9 +1,12 @@
 package pl.dawid.transportapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +19,8 @@ import pl.dawid.transportapp.service.CarService;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static pl.dawid.transportapp.util.Mappings.*;
@@ -42,15 +44,27 @@ public class CarController {
                 .orElseThrow(() -> new NotFoundException("Car with id= " + id + " not found"));
     }
 
+//    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(code = HttpStatus.OK)
+//    public Resources<Resource> getAllCars() {
+//        List<Resource> resourceList = service.findAll().stream()
+//                .map(this::mapToResourceWithLink)
+//                .collect(toList());
+//        Link link = linkTo(methodOn(CarController.class).getAllCars()).withSelfRel();
+//        return new Resources<>(resourceList, link);
+//    }
+
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource> getAllCars() {
-        List<Resource> resourceList = service.findAll().stream()
+    public PagedResources<Resource<Resource<CarDto>>> getAllCars(Pageable pageable, PagedResourcesAssembler<Resource<CarDto>> assembler) {
+        Page<CarDto> page = service.findAll(pageable);
+        List<Resource<CarDto>> collect = page.getContent().stream()
                 .map(this::mapToResourceWithLink)
-                .collect(toList());
-        Link link = linkTo(methodOn(CarController.class).getAllCars()).withSelfRel();
-        return new Resources<>(resourceList, link);
+                .collect(Collectors.toUnmodifiableList());
+        Page<Resource<CarDto>> resources = new PageImpl<>(collect, page.getPageable(), page.getTotalElements());
+        return assembler.toResource(resources);
     }
 
     @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")

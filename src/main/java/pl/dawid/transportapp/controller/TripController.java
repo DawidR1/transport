@@ -1,6 +1,8 @@
 package pl.dawid.transportapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -32,15 +34,27 @@ public class TripController {
         this.service = service;
     }
 
+//    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+//    @GetMapping(path = TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(code = HttpStatus.OK)
+//    public Resources<Resource> getAllNarrowTrip(Pageable pageable) {
+//        List<Resource> resourceList = service.getAllWithChildren(pageable).stream()
+//                .map(this::mapToResourceWithLink)
+//                .collect(toList());
+////        Link link = linkTo(methodOn(TripController.class).getAllNarrowTrip()).withSelfRel();
+//        return new Resources<>(resourceList, link);
+//    }
+
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = TRIP_NARROW_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource> getAllNarrowTrip() {
-        List<Resource> resourceList = service.findNarrowAll().stream()
-                .map(this::mapToResourceWithLink)
-                .collect(toList());
-        Link link = linkTo(methodOn(TripController.class).getAllNarrowTrip()).withSelfRel();
-        return new Resources<>(resourceList, link);
+    public Page<TripDto> getAllNarrowTrip(Pageable pageable) {
+        return service.getAllWithChildren(pageable);
+//        .stream()
+//                .map(this::mapToResourceWithLink)
+//                .collect(toList());
+////        Link link = linkTo(methodOn(TripController.class).getAllNarrowTrip()).withSelfRel();
+//        return new Resources<>(resourceList, link);
     }
 
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
@@ -66,7 +80,7 @@ public class TripController {
         List<Resource> resourceList = service.getAllWithChildren().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
-        Link link = linkTo(methodOn(TripController.class).getAllNarrowTrip()).withSelfRel();
+        Link link = linkTo(methodOn(TripController.class).getAllTrip()).withSelfRel();
         return new Resources<>(resourceList, link);
     }
 

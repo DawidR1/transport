@@ -2,6 +2,7 @@ package pl.dawid.transportapp.service;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.dawid.transportapp.dto.*;
@@ -9,6 +10,7 @@ import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.model.*;
 import pl.dawid.transportapp.repository.TripRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,17 +25,15 @@ public class TripService implements DtoConverter<TripDto, Trip> {
     private final CarService carService;
     private final LocationService locationService;
     private final LoadingPlaceService loadingPlaceService;
-    private final CargoService cargoService;
 
     @Autowired
     public TripService(TripRepository tripRepository, DriverService driverService, CarService carService,
-                       LocationService locationService, LoadingPlaceService loadingPlaceService, CargoService cargoService) {
+                       LocationService locationService, LoadingPlaceService loadingPlaceService) {
         this.repository = tripRepository;
         this.driverService = driverService;
         this.carService = carService;
         this.locationService = locationService;
         this.loadingPlaceService = loadingPlaceService;
-        this.cargoService = cargoService;
     }
 
     public Optional<TripDto> getDtoByIdWithLoadingPlaces(long id) {
@@ -41,10 +41,20 @@ public class TripService implements DtoConverter<TripDto, Trip> {
                 .map(entity -> convertToDto(entity, new TripDto()));
     }
 
+    @Transactional(readOnly = true)
     public List<TripDto> getAllWithChildren() {
-        return repository.findWithLoadingPlaces().stream()
+        return repository.findAll().stream()
                 .map(entity -> convertToDto(entity, new TripDto()))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PageImpl<TripDto> getAllWithChildren(Pageable pageable) {
+        Page<Trip> page = repository.findAll(pageable);
+        List<TripDto> contentDto = page.getContent().stream()
+                .map(entity -> convertToDto(entity, new TripDto()))
+                .collect(toList());
+        return new PageImpl<>(contentDto, page.getPageable(), page.getTotalElements());
     }
 
     public Optional<TripDto> getNarrowDtoById(long id) {
@@ -53,15 +63,16 @@ public class TripService implements DtoConverter<TripDto, Trip> {
     }
 
     public List<TripDto> findAll() {
+        Sort sort;
+        Pageable pageable = PageRequest.of(0, 10);
+        repository.findAll(pageable);
         return repository.findAll().stream()
                 .map(entity -> convertToDto(entity, new TripDto()))
                 .collect(toList());
     }
 
-    public List<TripDto> findNarrowAll() {
-        return repository.findAll().stream()
-                .map(entity -> convertToDto(entity, new TripDto()))
-                .collect(toList());
+    public List<Trip> findAllByDrivers(Driver driver, LocalDate startDate, LocalDate endDate){
+        return repository.findAllByDriverAndDateStartBetween(driver, startDate, endDate);
     }
 
     @Override
@@ -73,7 +84,7 @@ public class TripService implements DtoConverter<TripDto, Trip> {
         LocationDto placeStart = locationService.convertToDto(trip.getPlaceStart(), new LocationDto());
         List<LoadingPlaceDto> loadingPlaceDto = trip.getLoadingPlaces().stream()
                 .map(entity -> loadingPlaceService.convertToDto(entity, new LoadingPlaceDto()))
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
         trip.getPlaceFinish()
                 .map(entity -> locationService.convertToDto(entity, new LocationDto())).ifPresent(tripDto::setPlaceFinish);
         tripDto.setPlaceStart(placeStart);
@@ -94,6 +105,7 @@ public class TripService implements DtoConverter<TripDto, Trip> {
 
     @Transactional
     public Long addTrip(TripDto tripDto) {
+
         Trip.Builder builder = new Trip.Builder();
         addValidatedEntities(tripDto, builder);
         addSimpleAttributes(tripDto, builder);
@@ -111,7 +123,7 @@ public class TripService implements DtoConverter<TripDto, Trip> {
                 .id(tripDto.getId())
                 .fuel(tripDto.getFuel())
                 .dateStart(tripDto.getDateStart())
-                .dateFinish(tripDto.getDateFinish())
+                .dateFinish(tripDto.getDateFinish().orElse(null))
                 .income(tripDto.getIncome())
                 .status(tripDto.getStatus())
                 .cost(tripDto.getCost());

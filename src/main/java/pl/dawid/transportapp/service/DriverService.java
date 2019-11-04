@@ -2,6 +2,9 @@ package pl.dawid.transportapp.service;
 
 import antlr.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +50,15 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
                 .collect(toList());
     }
 
+    public Page<DriverDto> findAll(Pageable pageable) {
+        Page<Driver> page = repository.findAll(pageable);
+        List<DriverDto> content = page.getContent().stream()
+                .map(entity -> convertToDto(entity, new DriverDto()))
+                .collect(toList());
+        return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+
+    }
+
     public List<Long> findAllId(){
         return repository.findAllId();
     }
@@ -70,7 +82,7 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
     }
 
     @Transactional
-    public void update(DriverDto driverDto, Long id) { //TODO dorobic testy
+    public Long update(DriverDto driverDto, Long id) { //TODO dorobic testy
         Driver driverDb = repository.findById(id).orElseThrow(() -> new ExistInDataBase("Driver not found"));
         repository.findByPesel(driverDto.getPesel()).ifPresent(driver -> {
             if (!driver.getId().equals(driverDb.getId())) {
@@ -81,6 +93,7 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
         driverDto.setImageName(driverDb.getImageName());        //TODO przetestowac
         Driver driver = convertToEntity(driverDto, new Driver());
         repository.save(driver);
+        return driver.getId();
     }
 
     public void updateDriver(Long id, MultipartFile multipartFile) {

@@ -74,7 +74,7 @@ public class PdfDriverCreator implements PDFCreator {
             table.addCell(trip.getId().toString());
             table.addCell(trip.getDestination().getCountry());
             table.addCell(trip.getDateStart().toString());
-            table.addCell(trip.getDateFinish().toString());
+            trip.getDateFinish().ifPresentOrElse(date -> table.addCell(date.toString()), () -> table.addCell("Brak"));
             table.addCell(trip.getStatus().toString());
         }
         document.add(table);
@@ -84,11 +84,11 @@ public class PdfDriverCreator implements PDFCreator {
         Paragraph paragraph = new Paragraph();
         paragraph.add(SUMMARY);
         paragraph.setTextAlignment(TextAlignment.CENTER);
-        paragraph.setFixedPosition(50, 520, 400);
+        paragraph.setFixedPosition(50, 540, 400);
         document.add(paragraph);
 
         paragraph = new Paragraph();
-        paragraph.setFixedPosition(50, 450, 400);
+        paragraph.setFixedPosition(50, 500, 400);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append(PERIOD)

@@ -1,6 +1,9 @@
 package pl.dawid.transportapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.dawid.transportapp.dto.CarDto;
@@ -39,6 +42,14 @@ public class CarService implements DtoConverter<CarDto, Car> {
         return repository.findAll().stream()
                 .map(entity -> convertToDto(entity, new CarDto()))
                 .collect(toList());
+    }
+
+    public Page<CarDto> findAll(Pageable pageable) {
+        Page<Car> page = repository.findAll(pageable);
+        List<CarDto> carDto = page.getContent().stream()
+                .map(entity -> convertToDto(entity, new CarDto()))
+                .collect(toList());
+        return new PageImpl<>(carDto, page.getPageable(), page.getTotalElements());
     }
 
     @Transactional
