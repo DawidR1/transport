@@ -4,14 +4,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.dawid.transportapp.controller.tool.LocationCreator;
-import pl.dawid.transportapp.dto.DriverDto;
 import pl.dawid.transportapp.dto.LocationDto;
 import pl.dawid.transportapp.exception.NotFoundException;
 import pl.dawid.transportapp.service.LocationService;
@@ -21,12 +22,12 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static pl.dawid.transportapp.util.Mappings.*;
 
 @RestController
-@RequestMapping(LOCATION_URL)
 public class LocationController {
 
     private final LocationService service;
@@ -36,26 +37,26 @@ public class LocationController {
     }
 
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(path = ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = RESOURCE_LOCATION_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<LocationDto> getLocationById(@PathVariable Long id) {
         return service.findDtoById(id)
                 .map(this::mapToResourceWithLink)
                 .orElseThrow(() -> new NotFoundException("Location with id= " + id + " not found"));
     }
 
-//    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(code = HttpStatus.OK)
-//    public Resources<Resource> getAllLocations() {
-//        List<Resource> resourceList = service.findAll().stream()
-//                .map(this::mapToResourceWithLink)
-//                .collect(toList());
-//        Link link = linkTo(methodOn(LocationController.class).getAllLocations()).withSelfRel();
-//        return new Resources<>(resourceList, link);
-//    }
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @GetMapping(path = RESOURCE_LOCATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public Resources<Resource> getAllLocations() {
+        List<Resource> resourceList = service.findAll().stream()
+                .map(this::mapToResourceWithLink)
+                .collect(toList());
+        Link link = linkTo(methodOn(LocationController.class).getAllLocations()).withSelfRel();
+        return new Resources<>(resourceList, link);
+    }
 
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = LOCATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public PagedResources<Resource<Resource<LocationDto>>> getAllLocations(Pageable pageable, PagedResourcesAssembler<Resource<LocationDto>> assembler) {
         Page<LocationDto> page = service.findAll(pageable);
@@ -67,7 +68,7 @@ public class LocationController {
     }
 
     @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = LOCATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity postLocation(@Valid @RequestBody LocationDto locationDto) {
         Long id = service.addLocation(locationDto);
         URI location = LocationCreator.getLocation(LOCATION_URL, id);
@@ -75,7 +76,7 @@ public class LocationController {
     }
 
     @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
-    @PutMapping(ID_PATH)
+    @PutMapping(path = LOCATION_URL + ID_PATH)
     public ResponseEntity updateLocation(@Valid @RequestBody LocationDto locationDto, Long id) {
         Long idUpdated = service.updateLocation(locationDto);
         URI location = LocationCreator.getLocation(LOCATION_URL, idUpdated);

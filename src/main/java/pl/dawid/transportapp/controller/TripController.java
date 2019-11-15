@@ -2,8 +2,11 @@ package pl.dawid.transportapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -17,7 +20,9 @@ import pl.dawid.transportapp.service.TripService;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -34,39 +39,8 @@ public class TripController {
         this.service = service;
     }
 
-//    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-//    @GetMapping(path = TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(code = HttpStatus.OK)
-//    public Resources<Resource> getAllNarrowTrip(Pageable pageable) {
-//        List<Resource> resourceList = service.getAllWithChildren(pageable).stream()
-//                .map(this::mapToResourceWithLink)
-//                .collect(toList());
-////        Link link = linkTo(methodOn(TripController.class).getAllNarrowTrip()).withSelfRel();
-//        return new Resources<>(resourceList, link);
-//    }
-
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(path = TRIP_NARROW_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(code = HttpStatus.OK)
-    public Page<TripDto> getAllNarrowTrip(Pageable pageable) {
-        return service.getAllWithChildren(pageable);
-//        .stream()
-//                .map(this::mapToResourceWithLink)
-//                .collect(toList());
-////        Link link = linkTo(methodOn(TripController.class).getAllNarrowTrip()).withSelfRel();
-//        return new Resources<>(resourceList, link);
-    }
-
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(path = TRIP_NARROW_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Resource<TripDto> getNarrowTripById(@PathVariable Long id) {
-        return service.getNarrowDtoById(id)
-                .map(this::mapToResourceWithLink)
-                .orElseThrow(() -> new NotFoundException("Trip with id= " + id + " not found"));
-    }
-
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(path = TRIP_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = RESOURCE_TRIP_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<TripDto> getTripById(@PathVariable Long id) {
         return service.getDtoByIdWithLoadingPlaces(id)
                 .map(this::mapToResourceWithLink)
@@ -74,14 +48,34 @@ public class TripController {
     }
 
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
-    @GetMapping(path = TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = RESOURCE_TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public Resources<Resource> getAllTrip() {
-        List<Resource> resourceList = service.getAllWithChildren().stream()
+        List<Resource> resourceList = service.findAllWithChildren().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
         Link link = linkTo(methodOn(TripController.class).getAllTrip()).withSelfRel();
         return new Resources<>(resourceList, link);
+    }
+
+    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
+    @GetMapping(path = TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public PagedResources<Resource<Resource<TripDto>>> getAllTrip(Pageable pageable,
+                                                                  PagedResourcesAssembler<Resource<TripDto>> assembler,
+                                                                  @RequestParam Optional<LocalDate> fromDate,
+                                                                  @RequestParam Optional<LocalDate> toDate) {
+        Page<TripDto> page;
+        if (fromDate.isPresent() && toDate.isPresent()) {
+            page = service.findAllWithChildren(pageable, fromDate.get(), toDate.get());
+        } else {
+            page = service.findAllWithChildren(pageable);
+        }
+        List<Resource<TripDto>> content = page.getContent().stream()
+                .map(this::mapToResourceWithLink)
+                .collect(toList());
+        Page<Resource<TripDto>> resources = new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+        return assembler.toResource(resources);
     }
 
     @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
@@ -99,7 +93,6 @@ public class TripController {
         URI location = LocationCreator.getLocation(DRIVER_URL, id);
         return ResponseEntity.created(location).build();
     }
-
 
     private Resource<TripDto> mapToResourceWithLink(TripDto tripDto) {
         Resource<TripDto> resource = new Resource<>(tripDto);

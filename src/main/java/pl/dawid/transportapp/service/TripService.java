@@ -42,15 +42,24 @@ public class TripService implements DtoConverter<TripDto, Trip> {
     }
 
     @Transactional(readOnly = true)
-    public List<TripDto> getAllWithChildren() {
+    public List<TripDto> findAllWithChildren() {
         return repository.findAll().stream()
                 .map(entity -> convertToDto(entity, new TripDto()))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public PageImpl<TripDto> getAllWithChildren(Pageable pageable) {
+    public PageImpl<TripDto> findAllWithChildren(Pageable pageable) {
         Page<Trip> page = repository.findAll(pageable);
+        List<TripDto> contentDto = page.getContent().stream()
+                .map(entity -> convertToDto(entity, new TripDto()))
+                .collect(toList());
+        return new PageImpl<>(contentDto, page.getPageable(), page.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TripDto> findAllWithChildren(Pageable pageable, LocalDate from, LocalDate to) {
+        Page<Trip> page = repository.findAllByDateStartBetweenOrderByDateStartAsc(pageable, from, to);
         List<TripDto> contentDto = page.getContent().stream()
                 .map(entity -> convertToDto(entity, new TripDto()))
                 .collect(toList());
@@ -71,7 +80,7 @@ public class TripService implements DtoConverter<TripDto, Trip> {
                 .collect(toList());
     }
 
-    public List<Trip> findAllByDrivers(Driver driver, LocalDate startDate, LocalDate endDate){
+    public List<Trip> findAllByDrivers(Driver driver, LocalDate startDate, LocalDate endDate) {
         return repository.findAllByDriverAndDateStartBetween(driver, startDate, endDate);
     }
 
