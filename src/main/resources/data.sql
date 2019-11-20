@@ -73,6 +73,9 @@ insert into loading_place_cargo (loading_place_id,cargo_id) values (4,5);
 INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
 status,cost,fuel,distance,driver_salary) VALUES (4,'3000',3,2, 2,'2019-05-11','2010-06-11',2, 1,'FINISHED',200,50,20,700);
 INSERT INTO trip_loading_places (trip_id,loading_places_id) values (4,4);
+INSERT INTO user_role VALUES (1,'description','ADMIN');
+INSERT INTO user VALUES (1,'$2a$10$U8MM/DXBkf9SNcuznKCUAu3iEDLJR87OfiWfbnoVsfIp/uqOTXOi6','cos@cos');
+INSERT INTO user_roles VALUES (1,1)
 
 
 

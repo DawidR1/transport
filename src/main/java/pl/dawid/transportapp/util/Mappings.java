@@ -19,5 +19,5 @@ public class Mappings {
     public static final String RESOURCE_CAR_URL = RESOURCE_URL + CAR_URL;
     public static final String RESOURCE_LOCATION_URL = RESOURCE_URL + LOCATION_URL;
     public static final String RESOURCE_TRIP_URL = RESOURCE_URL + TRIP_URL;
-
+    public static final String AUTH_URL = "/auth";
 }
