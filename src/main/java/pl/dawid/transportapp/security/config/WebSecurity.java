@@ -13,6 +13,10 @@ import pl.dawid.transportapp.security.filter.JwtAuthenticationFilter;
 import pl.dawid.transportapp.security.filter.JwtAuthorizationFilter;
 import pl.dawid.transportapp.security.service.UserDetailsServiceImpl;
 
+import java.util.List;
+
+import static pl.dawid.transportapp.util.Mappings.CROSS_ORIGIN_LOCAL_FRONT;
+
 @Configuration
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
@@ -20,7 +24,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public WebSecurity(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
-
+//
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
@@ -41,9 +45,17 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of(CROSS_ORIGIN_LOCAL_FRONT));
+        configuration.setAllowedMethods(List.of("HEAD",
+                "GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setExposedHeaders(List.of("Location"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
 }

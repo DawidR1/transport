@@ -38,7 +38,6 @@ public class CarController {
         this.service = service;
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = RESOURCE_CAR_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<CarDto> getCarById(@PathVariable Long id) {
         return service.findDtoById(id)
@@ -46,7 +45,6 @@ public class CarController {
                 .orElseThrow(() -> new NotFoundException("Car with id= " + id + " not found"));
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = RESOURCE_CAR_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public Resources<Resource> getAllCars() {
@@ -57,7 +55,6 @@ public class CarController {
         return new Resources<>(resourceList, link);
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = CAR_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public PagedResources<Resource<Resource<CarDto>>> getAllCars(Pageable pageable, PagedResourcesAssembler<Resource<CarDto>> assembler) {
@@ -69,7 +66,6 @@ public class CarController {
         return assembler.toResource(resources);
     }
 
-    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PostMapping(path = CAR_URL)
     public ResponseEntity postCar(@Valid @RequestBody CarDto carDto) {
         Long id = service.addCar(carDto);
@@ -77,7 +73,7 @@ public class CarController {
         return ResponseEntity.created(location).build();
     }
 
-    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
+    @CrossOrigin(exposedHeaders = "Location")
     @PutMapping(path = CAR_URL + ID_PATH)
     public ResponseEntity updateCar(@Valid @RequestBody CarDto carDto, @PathVariable Long id) {
         service.update(carDto, id);

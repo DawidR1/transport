@@ -1,10 +1,10 @@
 
 -- ########## DRIVERS #############
-insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('1','12345678932','Dawid', 'Nowak', 'picture1.jpg', 'dawid.nowak@cos.com', '1990-10-12');
-insert into employee (id, pesel, first_name, last_name, email, birth) values ('2','12345678912','John', 'Smith', 'john.smith@cos.com', '1995-10-21');
+insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('1','12345678932','Anna', 'Nowak', 'p01.jpg', 'anna.nowak@sth.com', '1990-10-12');
+insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('2','12345678912','John', 'Smith', 'p02.jpg', 'john.smith@cos.com', '1995-10-21');
 
-insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('3','12325678932','Janusz', 'Kowalski', 'picture1.jpg', 'janusz.kowalski@cos.com', '1994-10-11');
-insert into employee (id, pesel, first_name, last_name, email, birth) values ('4','12345678955','Test', 'Test', 'example@cos.com', '1980-12-11');
+insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('3','12325678932','Joanna', 'Kowalska', 'p03.jpg', 'joanna.kowalska@cos.com', '1994-10-11');
+insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('4','12345678955','Dawid', 'Nowak', 'p04.jpg', 'dawid.nowak@cos.com', '1980-12-11');
 
 
 insert into driver (id, driving_license) values ('1', 'A');
@@ -38,45 +38,69 @@ INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`
 INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`) VALUES ('2', 'Żywiec', '40-700', 'Szkolna', 'Poland');
 INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`) VALUES ('3', 'Berlin', '00-005', 'Strasse', 'Germany');
 INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`) VALUES ('4', 'Berlin', '10178', 'Keibelstrase', 'Germany');
+INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`) VALUES ('5', 'Paris', '751', 'Monceau', 'France');
 
 -- ########## LOCATION #############
 
 
 -- ########## TRIP #############
-INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (1, 4, 50, 'Audi');
-INSERT INTO loading_place (id, nr, date, location_id) VALUES (1, 1, '2019-10-11', 1);
+INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (1, 4, 1000, 'Audi');
+INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (6, 3, 350, 'BMW');
+INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (7, 1, 500, 'Mercedes');
+
+INSERT INTO loading_place (id, nr, date, location_id, finished) VALUES (1, 1, '2019-09-16', 2, true);
+INSERT INTO loading_place (id, nr, date, location_id, finished) VALUES (5, 2, '2019-09-24', 1, true);
+INSERT INTO loading_place (id, nr, date, location_id, finished) VALUES (6, 3, '2019-09-28', 5, true);
+-- INSERT INTO loading_place (id, nr, date, location_id, finished) VALUES (7, 4, '2019-10-05', 2, true);
+
 insert into loading_place_cargo (loading_place_id,cargo_id) values (1,1);
+insert into loading_place_cargo (loading_place_id,cargo_id) values (5,6);
+insert into loading_place_cargo (loading_place_id,cargo_id) values (6,7);
+
 INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
-status,cost,fuel,distance,driver_salary) VALUES (1,'5000',1,2, 2,'2019-09-11','2019-11-11',1, 1,'FINISHED',800,500,2000,500);
+status,cost,fuel,distance,driver_salary) VALUES (1,'5000',2,2, 5,'2019-09-11','2019-10-11',1, 1,'FINISHED',800,500,2000,500);
+
 INSERT INTO trip_loading_places (trip_id,loading_places_id) values (1,1);
+INSERT INTO trip_loading_places (trip_id,loading_places_id) values (1,5);
+INSERT INTO trip_loading_places (trip_id,loading_places_id) values (1,6);
+-- INSERT INTO trip_loading_places (trip_id,loading_places_id) values (1,7);
 
 
 INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (2, 6, 250, 'BMW');
-INSERT INTO loading_place (id, nr, date, location_id) VALUES (2, 1, '2010-10-11', 1);
+INSERT INTO loading_place (id, nr, date, location_id, finished) VALUES (2, 1, '2019-10-13', 1, true);
 insert into loading_place_cargo (loading_place_id,cargo_id) values (2,2);
 INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
-status,cost,fuel,distance,driver_salary) VALUES (2,'3000',1,2, 2,'2019-05-11','2010-06-11',2, 2,'FINISHED',200,50,20,150);
+status,cost,fuel,distance,driver_salary) VALUES (2,'3000',1,2, 1,'2019-10-12','2019-10-15',2, 1,'FINISHED',200,50,20,150);
 INSERT INTO trip_loading_places (trip_id,loading_places_id) values (2,2);
 
 INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (3, 6, 250, 'VW');
 INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (4, 7, 300, 'BMW');
-INSERT INTO loading_place (id, nr, date, location_id) VALUES (3, 1, '2010-10-11', 1);
+INSERT INTO loading_place (id, nr, date, location_id, finished) VALUES (3, 1, '2019-12-14', 1, false );
 insert into loading_place_cargo (loading_place_id,cargo_id) values (3,3);
 insert into loading_place_cargo (loading_place_id,cargo_id) values (3,4);
 INSERT INTO trip (id,income,place_start_id,destination_id,start_date,car_id,driver_id,
-status,cost,fuel,distance,driver_salary) VALUES (3,'1000',1, 2,'2019-05-11',1, 2,'IN_PROGRESS',2200,70,20,400);
+status,cost,fuel,distance,driver_salary) VALUES (3,'1000',1, 4,'2019-12-10',1, 1,'IN_PROGRESS',2200,70,20,400);
 INSERT INTO trip_loading_places (trip_id,loading_places_id) values (3,3);
 --COPY
 INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (5, 1, 250, 'BMW');
-INSERT INTO loading_place (id, nr, date, location_id) VALUES (4, 1, '2010-10-11', 1);
+INSERT INTO loading_place (id, nr, date, location_id, finished) VALUES (4, 1, '2019-11-11', 1, false );
 insert into loading_place_cargo (loading_place_id,cargo_id) values (4,5);
 INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
-status,cost,fuel,distance,driver_salary) VALUES (4,'3000',3,2, 2,'2019-05-11','2010-06-11',2, 1,'FINISHED',200,50,20,700);
+status,cost,fuel,distance,driver_salary) VALUES (4,'3000',2,2, 3,'2019-11-10','2019-11-14',2, 1,'FINISHED',200,50,20,700);
 INSERT INTO trip_loading_places (trip_id,loading_places_id) values (4,4);
 INSERT INTO user_role VALUES (1,'description','ADMIN');
-INSERT INTO user VALUES (1,'$2a$10$U8MM/DXBkf9SNcuznKCUAu3iEDLJR87OfiWfbnoVsfIp/uqOTXOi6','cos@cos');
-INSERT INTO user_roles VALUES (1,1)
+INSERT INTO user VALUES (1,'$2a$10$U8MM/DXBkf9SNcuznKCUAu3iEDLJR87OfiWfbnoVsfIp/uqOTXOi6','example@example.pl');
+INSERT INTO user_roles VALUES (1,1);
 
+
+INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
+status,cost,fuel,distance,driver_salary) VALUES (5,'3000',1,2, 1,'2019-08-12','2019-08-15',2, 2,'FINISHED',200,50,20,600);
+
+INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
+status,cost,fuel,distance,driver_salary) VALUES (6,'3000',1,2, 5,'2019-09-14','2019-09-15',2, 3,'FINISHED',200,50,20,800);
+
+INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
+status,cost,fuel,distance,driver_salary) VALUES (7,'3000',1,2, 5,'2019-10-11','2019-10-15',2, 4,'FINISHED',200,50,20,750);
 
 
 

@@ -38,4 +38,7 @@ public class LoadingPlace {
 
     private BigDecimal income;
 
+    @Column(name = "finished")
+    private boolean isFinished;
+
 }

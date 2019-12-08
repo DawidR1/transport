@@ -9,6 +9,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,6 @@ public class DriverController {
         this.service = service;
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = RESOURCE_DRIVER_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<DriverDto> getDriverById(@PathVariable Long id) {
         return service.findDtoById(id)
@@ -47,7 +47,6 @@ public class DriverController {
                 .orElseThrow(() -> new NotFoundException("Driver with id= " + id + " not found"));
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = RESOURCE_DRIVER_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public Resources<Resource> getAllDrivers() {
@@ -58,7 +57,6 @@ public class DriverController {
         return new Resources<>(resourceList, link);
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = DRIVER_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public PagedResources<Resource<Resource<DriverDto>>> getAllDrivers(Pageable pageable, PagedResourcesAssembler<Resource<DriverDto>> assembler) {
@@ -70,15 +68,15 @@ public class DriverController {
         return assembler.toResource(resources);
     }
 
-    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PostMapping(path = DRIVER_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity postDriver(@Valid @RequestBody DriverDto driverDto) {
         Long id = service.addDriver(driverDto);
         URI location = LocationCreator.getLocation(DRIVER_URL, id);
-        return ResponseEntity.created(location).build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Access-Control-Expose-Headers","Location");
+        return ResponseEntity.created(location).headers(headers).build();
     }
 
-    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PutMapping(path = DRIVER_URL + ID_PATH)
     public ResponseEntity updateDriver(@Valid @RequestBody DriverDto driverDto, @PathVariable Long id) {
         Long idUpdated = service.update(driverDto, id);

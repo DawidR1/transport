@@ -23,6 +23,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -65,12 +66,9 @@ public class TripController {
                                                                   PagedResourcesAssembler<Resource<TripDto>> assembler,
                                                                   @RequestParam Optional<LocalDate> fromDate,
                                                                   @RequestParam Optional<LocalDate> toDate) {
-        Page<TripDto> page;
-        if (fromDate.isPresent() && toDate.isPresent()) {
-            page = service.findAllWithChildren(pageable, fromDate.get(), toDate.get());
-        } else {
-            page = service.findAllWithChildren(pageable);
-        }
+        Page<TripDto> page = fromDate.isPresent() && toDate.isPresent()
+                ? service.findAllWithChildren(pageable, fromDate.get(), toDate.get())
+                : service.findAllWithChildren(pageable);
         List<Resource<TripDto>> content = page.getContent().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());

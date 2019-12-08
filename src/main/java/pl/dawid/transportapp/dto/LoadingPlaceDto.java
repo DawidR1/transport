@@ -31,4 +31,6 @@ public class LoadingPlaceDto {
     private LocationDto location;
 
     private BigDecimal income;
+
+    private boolean isFinished;
 }
