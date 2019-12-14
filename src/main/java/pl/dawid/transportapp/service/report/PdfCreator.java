@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @FunctionalInterface
-public interface PDFCreator {
+public interface PdfCreator {
 
     ByteArrayOutputStream create() throws IOException;
 }

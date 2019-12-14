@@ -23,7 +23,7 @@ import static pl.dawid.transportapp.service.report.tool.ReportConst.*;
 
 @Component
 @Qualifier("companyPdf")
-public class PdfCompanyCreator implements PDFCreator {
+public class PdfCompanyCreator implements PdfCreator {
 
     private TripReport tripReport;
 

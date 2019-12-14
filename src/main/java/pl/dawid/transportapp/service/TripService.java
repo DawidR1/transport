@@ -128,8 +128,7 @@ public class TripService implements DtoConverter<TripDto, Trip> {
                 .map(LocationDto::getId)
                 .flatMap(locationService::findById)
                 .ifPresent(builder::placeFinish);
-        builder
-                .id(tripDto.getId())
+        builder.id(tripDto.getId())
                 .fuel(tripDto.getFuel())
                 .dateStart(tripDto.getDateStart())
                 .dateFinish(tripDto.getDateFinish().orElse(null))

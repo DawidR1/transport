@@ -30,7 +30,7 @@ public class ReportServiceImpl {
         return creatorCompany.createReport(startDate, endDate);
     }
 
-    public ByteArrayOutputStream convertIntoPdf(PDFCreator creator) {
+    public ByteArrayOutputStream convertIntoPdf(PdfCreator creator) {
         try {
             return creator.create();
         } catch (IOException e) {

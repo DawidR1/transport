@@ -27,7 +27,7 @@ import static pl.dawid.transportapp.service.report.tool.ReportConst.*;
 
 @Component
 @Qualifier("driverPdf")
-public class PdfDriverCreator implements PDFCreator {
+public class PdfDriverCreator implements PdfCreator {
 
     private int x = 580;
     private int y = 850;
