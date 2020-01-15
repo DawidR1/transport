@@ -40,7 +40,6 @@ public class TripController {
         this.service = service;
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = RESOURCE_TRIP_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<TripDto> getTripById(@PathVariable Long id) {
         return service.getDtoByIdWithLoadingPlaces(id)
@@ -48,7 +47,6 @@ public class TripController {
                 .orElseThrow(() -> new NotFoundException("Trip with id= " + id + " not found"));
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = RESOURCE_TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public Resources<Resource> getAllTrip() {
@@ -59,7 +57,6 @@ public class TripController {
         return new Resources<>(resourceList, link);
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public PagedResources<Resource<Resource<TripDto>>> getAllTrip(Pageable pageable,
@@ -76,7 +73,6 @@ public class TripController {
         return assembler.toResource(resources);
     }
 
-    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PostMapping(path = TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity postDriver(@Valid @RequestBody TripDto tripDto) {
         Long id = service.addTrip(tripDto);
@@ -84,7 +80,6 @@ public class TripController {
         return ResponseEntity.created(location).build();
     }
 
-    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PutMapping(path = TRIP_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateDriver(@Valid @RequestBody TripDto tripDto) {
         Long id = service.addTrip(tripDto);

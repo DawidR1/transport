@@ -33,15 +33,18 @@ public abstract class Employee {
     @DateTimeFormat(pattern = DATE_FORMAT)
     private LocalDate birth;
 
+    private String phone;
+
     public Employee() {
     }
 
-    public Employee(String pesel, String firstName, String lastName, String imageName, String email, LocalDate birth) {
+    public Employee(String pesel, String firstName, String lastName, String imageName, String email, LocalDate birth, String phone) {
         this.pesel = pesel;
         this.firstName = firstName;
         this.lastName = lastName;
         this.imageName = imageName;
         this.email = email;
         this.birth = birth;
+        this.phone = phone;
     }
 }

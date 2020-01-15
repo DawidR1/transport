@@ -36,6 +36,8 @@ public class DriverDto {
 
     private DrivingLicenseCategory drivingLicense;
 
+    private String phone;
+
     @DateTimeFormat(pattern = DATE_FORMAT)
     private LocalDate birth;
 

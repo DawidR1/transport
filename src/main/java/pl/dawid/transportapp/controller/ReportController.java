@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.dawid.transportapp.dto.ReportDriver;
 import pl.dawid.transportapp.dto.TripReport;
 import pl.dawid.transportapp.enums.Format;
-import pl.dawid.transportapp.service.report.PDFCreator;
+import pl.dawid.transportapp.service.report.PdfCreator;
 import pl.dawid.transportapp.service.report.PdfCompanyCreator;
 import pl.dawid.transportapp.service.report.PdfDriverCreator;
 import pl.dawid.transportapp.service.report.ReportServiceImpl;
@@ -50,7 +50,7 @@ public class ReportController {
         return format.equals(Format.PDF) ? convertToResponsePdf(companyPdfCreator) : ResponseEntity.ok(report);
     }
 
-    private ResponseEntity convertToResponsePdf(PDFCreator format) {
+    private ResponseEntity convertToResponsePdf(PdfCreator format) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(reportService.convertIntoPdf(format).toByteArray());

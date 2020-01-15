@@ -1,14 +1,19 @@
 
 -- ########## DRIVERS #############
-insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('1','12345678932','Anna', 'Nowak', 'p01.jpg', 'anna.nowak@sth.com', '1990-10-12');
-insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('2','12345678912','John', 'Smith', 'p02.jpg', 'john.smith@cos.com', '1995-10-21');
+insert into employee (id, pesel, first_name, last_name, image_name, email, birth, phone)
+values ('1','12345678932','Anna', 'Nowak', 'p01.jpg', 'anna.nowak@sth.com', '1990-10-12', '123596873');
 
-insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('3','12325678932','Joanna', 'Kowalska', 'p03.jpg', 'joanna.kowalska@cos.com', '1994-10-11');
-insert into employee (id, pesel, first_name, last_name, image_name, email, birth) values ('4','12345678955','Dawid', 'Nowak', 'p04.jpg', 'dawid.nowak@cos.com', '1980-12-11');
-
+insert into employee (id, pesel, first_name, last_name, image_name, email, birth, phone)
+values ('2','12345678912','John', 'Smith', 'p02.jpg', 'john.smith@cos.com', '1995-10-21', '925596223');
 
 insert into driver (id, driving_license) values ('1', 'A');
 insert into driver (id, driving_license) values ('2', 'B');
+
+insert into employee (id, pesel, first_name, last_name, image_name, email, birth, phone) values ('3','12325678932','Joanna', 'Kowalska', 'p03.jpg', 'joanna.kowalska@cos.com', '1994-10-11', '965526236');
+insert into employee (id, pesel, first_name, last_name, image_name, email, birth, phone) values ('4','12345678955','Dawid', 'Nowak', 'p04.jpg', 'dawid.nowak@cos.com', '1980-12-11','223546692');
+
+
+
 
 insert into driver (id, driving_license) values ('3', 'C');
 insert into driver (id, driving_license) values ('4', 'A');

@@ -15,15 +15,12 @@ import java.util.Optional;
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Long> {
 
-    @Query("select DISTINCT trip from Trip trip left join fetch trip.loadingPlaces where trip.driver = :driver and trip.dateStart between :startDate and  :endDate")
+    @Query("select DISTINCT trip from Trip trip left join fetch trip.loadingPlaces " +
+            "where trip.driver = :driver and trip.dateStart between :startDate and  :endDate")
     List<Trip> findAllByDriverAndDateStartBetween(Driver driver, LocalDate startDate, LocalDate endDate);
 
     @Query("select DISTINCT trip from Trip trip left join fetch trip.loadingPlaces where trip.id = :id")
     Optional<Trip> findByIdWithLoadingPlaces(Long id);
-
-    @Query(value = "select DISTINCT trip from Trip trip left join fetch trip.loadingPlaces order by :#{pageable}",
-            countQuery = "select count(trip.id) from Trip trip")
-    Page<Trip> findWithLoadingPlaces(Pageable pageable);
 
     Page<Trip> findAllByDateStartBetweenOrderByDateStartAsc(Pageable pageable, LocalDate dateStart, LocalDate dateFinish);
 }

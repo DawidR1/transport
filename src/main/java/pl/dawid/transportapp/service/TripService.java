@@ -114,7 +114,6 @@ public class TripService implements DtoConverter<TripDto, Trip> {
 
     @Transactional
     public Long addTrip(TripDto tripDto) {
-
         Trip.Builder builder = new Trip.Builder();
         addValidatedEntities(tripDto, builder);
         addSimpleAttributes(tripDto, builder);
@@ -144,15 +143,18 @@ public class TripService implements DtoConverter<TripDto, Trip> {
         Car car = carService.findById(tripDto.getCar().getId())
                 .orElseThrow(() -> new NotFoundException("Car with id:" + tripDto.getCar().getId() + "not found"));
         Location destination = locationService.findById(tripDto.getDestination().getId())
-                .orElseThrow(() -> new NotFoundException("Location destination with id:" + tripDto.getDestination().getId() + "not found"));
+                .orElseThrow(() -> new NotFoundException("Location destination with id:"
+                        + tripDto.getDestination().getId() + "not found"));
         Location placeStart = locationService.findById(tripDto.getPlaceStart().getId())
-                .orElseThrow(() -> new NotFoundException("Location place start with id:" + tripDto.getPlaceStart().getId() + "not found"));
+                .orElseThrow(() -> new NotFoundException("Location place start with id:"
+                        + tripDto.getPlaceStart().getId() + "not found"));
         List<LoadingPlace> loadingPlaces = tripDto.getLoadingPlaces().stream()
                 .map(dto -> loadingPlaceService.convertToEntity(dto, new LoadingPlace()))
                 .collect(Collectors.toList());
         loadingPlaces.forEach(loadingPlace -> {
             Location location = locationService.findById(loadingPlace.getLocation().getId())
-                    .orElseThrow(() -> new NotFoundException("Location in Loading Place with id:" + loadingPlace.getId() + "not found"));
+                    .orElseThrow(() -> new NotFoundException("Location in Loading Place with id:"
+                            + loadingPlace.getId() + "not found"));
             loadingPlace.setLocation(location);
         });
 

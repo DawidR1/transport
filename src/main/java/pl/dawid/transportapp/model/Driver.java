@@ -15,9 +15,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Driver extends Employee {
 
-    public Driver(String pesel, String firstName, String lastName, String imageName, String email, LocalDate birth,
+    public Driver(String pesel, String firstName, String lastName, String imageName, String email, LocalDate birth, String phone,
                   DrivingLicenseCategory drivingLicense) {
-        super(pesel, firstName, lastName, imageName, email, birth);
+        super(pesel, firstName, lastName, imageName, email, birth, phone);
         this.drivingLicense = drivingLicense;
     }
 
