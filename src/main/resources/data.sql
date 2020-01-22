@@ -39,11 +39,13 @@ insert into car (plate, brand, model) values ('XX9799','Ford', 'Transit');
 
 
 -- ########## LOCATION #############
-INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`) VALUES ('1', 'Katowice', '40-748', 'Moniuszki', 'Poland');
-INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`) VALUES ('2', 'Żywiec', '40-700', 'Szkolna', 'Poland');
-INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`) VALUES ('3', 'Berlin', '00-005', 'Strasse', 'Germany');
-INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`) VALUES ('4', 'Berlin', '10178', 'Keibelstrase', 'Germany');
-INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`) VALUES ('5', 'Paris', '751', 'Monceau', 'France');
+INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`,`lat_lng`) VALUES ('1', 'Katowice', '40-097', '3 Maja 30', 'Poland', '50.2593822,19.017685400000005');
+INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`,`lat_lng`) VALUES ('2', 'Żywiec', '34-300', 'Wesoła 64', 'Poland', '49.6895941,19.18290860000002');
+INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`,`lat_lng`) VALUES ('3', 'Brno-střed', '639 00', 'Bakalovo nábř. 8', 'Czechia','49.1846906,16.598918599999934');
+INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`,`lat_lng`) VALUES ('4', 'Berlin', '12101', 'Wüsthoffstraße 15', 'Germany','52.4781617,13.373127100000033');
+INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`,`lat_lng`) VALUES ('5', 'Lyon', '69008', '6 Cours Albert Thomas', 'France','45.7489557,4.86127620000002');
+INSERT INTO `location` (`id`, `city`, `postal_code`, `street_address`, `country`,`lat_lng`) VALUES ('6', 'Antwerpen', '2060', 'Handelstraat 101', 'Belgium','51.2241328,4.430914700000017');
+
 
 -- ########## LOCATION #############
 

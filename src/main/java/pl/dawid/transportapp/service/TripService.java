@@ -43,7 +43,7 @@ public class TripService implements DtoConverter<TripDto, Trip> {
 
     @Transactional(readOnly = true)
     public List<TripDto> findAllWithChildren() {
-        return repository.findAll().stream()
+        return repository.findAll(Sort.by(Sort.Direction.DESC, "dateStart")).stream()
                 .map(entity -> convertToDto(entity, new TripDto()))
                 .collect(Collectors.toList());
     }
@@ -142,22 +142,12 @@ public class TripService implements DtoConverter<TripDto, Trip> {
                 .orElseThrow(() -> new NotFoundException("Driver with id:" + tripDto.getDriver().getId() + "not found"));
         Car car = carService.findById(tripDto.getCar().getId())
                 .orElseThrow(() -> new NotFoundException("Car with id:" + tripDto.getCar().getId() + "not found"));
-        Location destination = locationService.findById(tripDto.getDestination().getId())
-                .orElseThrow(() -> new NotFoundException("Location destination with id:"
-                        + tripDto.getDestination().getId() + "not found"));
-        Location placeStart = locationService.findById(tripDto.getPlaceStart().getId())
-                .orElseThrow(() -> new NotFoundException("Location place start with id:"
-                        + tripDto.getPlaceStart().getId() + "not found"));
+        Location destination = locationService.convertToEntity(tripDto.getDestination(), new Location());
+        Location placeStart = locationService.convertToEntity(tripDto.getPlaceStart(), new Location());
         List<LoadingPlace> loadingPlaces = tripDto.getLoadingPlaces().stream()
                 .map(dto -> loadingPlaceService.convertToEntity(dto, new LoadingPlace()))
                 .collect(Collectors.toList());
-        loadingPlaces.forEach(loadingPlace -> {
-            Location location = locationService.findById(loadingPlace.getLocation().getId())
-                    .orElseThrow(() -> new NotFoundException("Location in Loading Place with id:"
-                            + loadingPlace.getId() + "not found"));
-            loadingPlace.setLocation(location);
-        });
-
+        loadingPlaces.forEach(loadingPlace -> loadingPlace.setLocation(loadingPlace.getLocation()));
         builder
                 .car(car)
                 .driver(driver)

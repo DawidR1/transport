@@ -24,4 +24,6 @@ public class LocationDto {
 
     @NotBlank
     private String country;
+
+    private String latLng;
 }

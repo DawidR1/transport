@@ -46,13 +46,17 @@ public class PdfCompanyCreator implements PdfCreator {
 
         Paragraph paragraph = new Paragraph(COMPANY_REPORT);
         paragraph.setTextAlignment(TextAlignment.CENTER);
+        paragraph.setFontSize(14);
+        paragraph.setBold();
         document.add(paragraph);
     }
 
     private void addTableContent(Document document, TripReport tripReport) {
         float[] point = {116f, 116f, 116f, 116f, 116f};
         Table table = new Table(point);
-        document.add(new Paragraph(LIST_OF_ALL_TRIPS));
+        Paragraph paragraph = new Paragraph(LIST_OF_ALL_TRIPS);
+        paragraph.setBold();
+        document.add(paragraph);
         table.addHeaderCell("#");
         table.addHeaderCell(DESTINATION);
         table.addHeaderCell(DATE_START);
@@ -64,7 +68,7 @@ public class PdfCompanyCreator implements PdfCreator {
                     table.addCell(trip.getId().toString());
                     table.addCell(trip.getDestination().getCountry());
                     table.addCell(trip.getDateStart().toString());
-                    trip.getDateFinish().ifPresentOrElse(date -> table.addCell(date.toString()), () -> table.addCell("Brak"));
+                    trip.getDateFinish().ifPresentOrElse(date -> table.addCell(date.toString()), () -> table.addCell("empty"));
                     table.addCell(trip.getStatus().toString());
                 });
         document.add(table);
@@ -72,12 +76,6 @@ public class PdfCompanyCreator implements PdfCreator {
 
     private void addSummary(Document document, TripReport tripReport) {
         Paragraph paragraph = new Paragraph();
-
-        paragraph.add(SUMMARY);
-        paragraph.setTextAlignment(TextAlignment.CENTER);
-        document.add(paragraph);
-
-        paragraph = new Paragraph();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append(PERIOD + "       ")
@@ -94,6 +92,9 @@ public class PdfCompanyCreator implements PdfCreator {
     }
 
     private void addDriverContent(Document document, TripReport tripReport) {
+        Paragraph paragraph = new Paragraph("List of drivers");
+        paragraph.setBold();
+        document.add(paragraph);
         tripReport.getReportDrivers().stream()
                 .map(this::populateContent)
                 .forEach(document::add);
@@ -121,7 +122,7 @@ public class PdfCompanyCreator implements PdfCreator {
                 .append(SALARY)
                 .append(salary);
         Paragraph paragraph = new Paragraph(content.toString());
-        paragraph.setBorder(new SolidBorder(1));
+        paragraph.setBorder(new SolidBorder(0.5f));
         return paragraph;
     }
 

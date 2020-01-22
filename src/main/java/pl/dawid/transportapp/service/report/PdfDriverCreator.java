@@ -64,8 +64,8 @@ public class PdfDriverCreator implements PdfCreator {
     private void addTableContent(Document document, ReportDriver reportDriver) {
         float[] point = {116f, 116f, 116f, 116f, 116f};
         Table table = new Table(point);
-        table.setFixedPosition(50, 400, 400);
-        table.addHeaderCell("#");
+        table.setFixedPosition(50, 400, 500);
+        table.addHeaderCell(ID);
         table.addHeaderCell(DESTINATION);
         table.addHeaderCell(DATE_START);
         table.addHeaderCell(DATE_FINISH);
@@ -74,7 +74,7 @@ public class PdfDriverCreator implements PdfCreator {
             table.addCell(trip.getId().toString());
             table.addCell(trip.getDestination().getCountry());
             table.addCell(trip.getDateStart().toString());
-            trip.getDateFinish().ifPresentOrElse(date -> table.addCell(date.toString()), () -> table.addCell("Brak"));
+            trip.getDateFinish().ifPresentOrElse(date -> table.addCell(date.toString()), () -> table.addCell("empty"));
             table.addCell(trip.getStatus().toString());
         }
         document.add(table);
@@ -84,11 +84,12 @@ public class PdfDriverCreator implements PdfCreator {
         Paragraph paragraph = new Paragraph();
         paragraph.add(SUMMARY);
         paragraph.setTextAlignment(TextAlignment.CENTER);
-        paragraph.setFixedPosition(50, 540, 400);
+        paragraph.setFixedPosition(50, 510, 500);
+        paragraph.setBold();
         document.add(paragraph);
 
         paragraph = new Paragraph();
-        paragraph.setFixedPosition(50, 500, 400);
+        paragraph.setFixedPosition(50, 450, 500);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append(PERIOD)
@@ -124,7 +125,9 @@ public class PdfDriverCreator implements PdfCreator {
     }
 
     private void addTitle(Document document) {
-        Paragraph paragraph = new Paragraph(REPORT);
+        Paragraph paragraph = new Paragraph(DRIVER_REPORT);
+        paragraph.setBold();
+        paragraph.setFontSize(14);
         paragraph.setTextAlignment(TextAlignment.CENTER);
         document.add(paragraph);
     }
@@ -132,11 +135,11 @@ public class PdfDriverCreator implements PdfCreator {
     private void addProfileImage(Document document, ReportDriver reportDriver) {
         getImage(reportDriver).stream()
                 .peek(imageData -> {
-                    imageData.setHeight(130);
+                    imageData.setHeight(180);
                     imageData.setWidth(150);
                 })
                 .map(Image::new)
-                .peek(image -> image.setFixedPosition(50, 620)) //y 850 x 580
+                .peek(image -> image.setFixedPosition(50, 570)) //y 850 x 580
                 .findAny()
                 .ifPresent(document::add);
     }

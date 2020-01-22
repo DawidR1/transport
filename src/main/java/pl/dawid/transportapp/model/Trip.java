@@ -22,13 +22,13 @@ public class Trip {
     private Long id;
     private BigDecimal income;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Location placeStart;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Location placeFinish;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Location destination;
 
     @Column(name = "start_date", nullable = false)

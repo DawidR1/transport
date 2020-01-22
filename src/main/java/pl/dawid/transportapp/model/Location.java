@@ -24,4 +24,6 @@ public class Location {
     @Column(nullable = false)
     private String country;
 
+    private String latLng;
+
 }

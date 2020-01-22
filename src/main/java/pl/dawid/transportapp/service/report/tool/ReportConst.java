@@ -12,10 +12,12 @@ public class ReportConst {
     public static final String DATE_START = "Date Start";
     public static final String DATE_FINISH = "Date Finish";
     public static final String STATUS = "Status";
-    public static final String LIST_OF_ALL_TRIPS = "List of all trips";
+    public static final String LIST_OF_ALL_TRIPS = "List of trips";
     public static final String COMPANY_REPORT = "Company report";
     public static final String BIRTH = "Birth: ";
-    public static final String REPORT = "Report";
+    public static final String DRIVER_REPORT = "Driver Report";
+    public static final String ID = "ID";
+
 
 
 }
