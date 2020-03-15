@@ -6,6 +6,7 @@ import pl.dawid.transportapp.model.Trip;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -25,6 +26,7 @@ public class CompanyCalculatorImpl implements CompanyCalculator {
         BigDecimal cost = calculateCosts(tripDtos);
         return tripDtos.stream()
                 .map(TripDto::getIncome)
+                .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .subtract(cost);
     }
@@ -32,6 +34,7 @@ public class CompanyCalculatorImpl implements CompanyCalculator {
     private BigDecimal calculateCosts(List<TripDto> tripDtos) {
         return tripDtos.stream()
                 .map(TripDto::getCost)
+                .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

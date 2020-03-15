@@ -24,7 +24,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public WebSecurity(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
-//
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
@@ -56,6 +56,4 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
 }

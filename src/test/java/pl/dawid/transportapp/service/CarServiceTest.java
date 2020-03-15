@@ -34,16 +34,16 @@ class CarServiceTest {
 
     @InjectMocks
     private CarService carService;
-    private List<Car> fakeCars;
+    private List<Car> testCars;
 
     @BeforeEach
     void init() {
         Car car = ObjectTestGenerator.getCorrectCar(1);
         Car car2 = ObjectTestGenerator.getCorrectCar(2);
-        fakeCars = Arrays.asList(car,car2);
+        testCars = Arrays.asList(car,car2);
 
-        when(carRepository.findAll()).thenReturn(fakeCars);
-        when(carRepository.findById(anyLong())).thenReturn(Optional.of(fakeCars.get(0)));
+        when(carRepository.findAll()).thenReturn(testCars);
+        when(carRepository.findById(anyLong())).thenReturn(Optional.of(testCars.get(0)));
     }
 
 
@@ -51,7 +51,7 @@ class CarServiceTest {
     void shouldFindAndMapToDtoWhenRequest() {
         Optional<CarDto> carDto = carService.findDtoById(1L);
 
-        assertEquals(fakeCars.get(0).getId(), carDto.get().getId());
+        assertEquals(testCars.get(0).getId(), carDto.get().getId());
     }
 
     @Test

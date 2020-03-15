@@ -64,7 +64,7 @@ public class PdfDriverCreator implements PdfCreator {
     private void addTableContent(Document document, ReportDriver reportDriver) {
         float[] point = {116f, 116f, 116f, 116f, 116f};
         Table table = new Table(point);
-        table.setFixedPosition(50, 400, 500);
+        table.setFixedPosition(50, 300, 500);
         table.addHeaderCell(ID);
         table.addHeaderCell(DESTINATION);
         table.addHeaderCell(DATE_START);

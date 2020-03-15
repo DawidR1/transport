@@ -90,10 +90,10 @@ status,cost,fuel,distance,driver_salary) VALUES (3,'1000',1, 4,'2019-12-10',1, 1
 INSERT INTO trip_loading_places (trip_id,loading_places_id) values (3,3);
 --COPY
 INSERT INTO cargo (id, number_of_pallets, weight, company_name) VALUES (5, 1, 250, 'BMW');
-INSERT INTO loading_place (id, nr, date, location_id, finished) VALUES (4, 1, '2019-11-11', 1, false );
+INSERT INTO loading_place (id, nr, date, location_id, finished) VALUES (4, 1, '2019-11-11', 1, true );
 insert into loading_place_cargo (loading_place_id,cargo_id) values (4,5);
 INSERT INTO trip (id,income,place_start_id,place_finish_id,destination_id,start_date,finish_date,car_id,driver_id,
-status,cost,fuel,distance,driver_salary) VALUES (4,'3000',2,2, 3,'2019-11-10','2019-11-14',2, 1,'FINISHED',200,50,20,700);
+status,cost,fuel,distance,driver_salary) VALUES (4,'3000',2,5, 5,'2019-11-10','2019-11-14',2, 1,'FINISHED',2000,100,200,700);
 INSERT INTO trip_loading_places (trip_id,loading_places_id) values (4,4);
 INSERT INTO user_role VALUES (1,'description','ADMIN');
 INSERT INTO user VALUES (1,'$2a$10$U8MM/DXBkf9SNcuznKCUAu3iEDLJR87OfiWfbnoVsfIp/uqOTXOi6','example@example.pl');
