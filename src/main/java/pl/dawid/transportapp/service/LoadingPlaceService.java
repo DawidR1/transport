@@ -18,13 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class LoadingPlaceService implements DtoConverter<LoadingPlaceDto, LoadingPlace> {
 
-    private final LoadingPlaceRepository repository;
     private final LocationService locationService;
     private final CargoService cargoService;
 
     @Autowired
-    public LoadingPlaceService(LoadingPlaceRepository repository, LocationService locationService, CargoService cargoService) {
-        this.repository = repository;
+    public LoadingPlaceService(LocationService locationService, CargoService cargoService) {
         this.locationService = locationService;
         this.cargoService = cargoService;
     }
@@ -51,13 +49,5 @@ public class LoadingPlaceService implements DtoConverter<LoadingPlaceDto, Loadin
         loadingPlace.setLocation(location);
         loadingPlace.setCargo(cargos);
         return loadingPlace;
-    }
-
-    public Optional<LoadingPlace> findById(long id) {
-        return repository.findById(id);
-    }
-
-    public void save(LoadingPlace loadingPlace) {
-        repository.save(loadingPlace);
     }
 }

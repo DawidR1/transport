@@ -22,11 +22,12 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(CarController.class)
+@WebMvcTest(value = CarController.class, secure = false)
 class CarControllerTest {
 
     @MockBean
@@ -39,7 +40,7 @@ class CarControllerTest {
     void init() {
         CarDto carDto = ObjectTestGenerator.getCorrectCarDto(1);
         CarDto carDto2 = ObjectTestGenerator.getCorrectCarDto(2);
-        List<CarDto> fakeCars = Arrays.asList(carDto,carDto2);
+        List<CarDto> fakeCars = Arrays.asList(carDto, carDto2);
 
         when(service.findAll()).thenReturn(fakeCars);
         when(service.findDtoById(anyLong())).thenReturn(Optional.of(fakeCars.get(0)));
@@ -48,36 +49,30 @@ class CarControllerTest {
 
     @Test
     void shouldReturnOKWhenAllCarRequested() throws Exception {
-        mvc.perform(get("/car"))
+        mvc.perform(get("/resource/car"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void shouldReturnShelfHrefWhenRequested() throws Exception {
-        mvc.perform(get("/car"))
-                .andExpect(jsonPath("_links.self.href", is("http://localhost/car")))
-                .andExpect(jsonPath("_embedded.carDtoes[0]._links.self.href", is("http://localhost/car/1")));
+        mvc.perform(get("/resource/car"))
+                .andExpect(jsonPath("_links.self.href", is("http://localhost/resource/car")))
+                .andExpect(jsonPath("_embedded.carDtoes[0]._links.self.href", is("http://localhost/resource/car/1")));
     }
 
     @Test
     void shouldReturnCarWithIdOneWhenRequested() throws Exception {
-        mvc.perform(get("/car/1"))
+        mvc.perform(get("/resource/car/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("brand", is("brand1")))
-                .andExpect(jsonPath("_links.self.href", is("http://localhost/car/1")));
+                .andExpect(jsonPath("_links.self.href", is("http://localhost/resource/car/1")));
     }
 
     @Test
     void shouldReturn404WhenCarNotExists() throws Exception {
         when(service.findDtoById(anyLong())).thenReturn(Optional.empty());
-        mvc.perform(get("/car/4"))
+        mvc.perform(get("/resource/car/4"))
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void shouldReturn200WhenCarWasRemoved() throws Exception {
-        mvc.perform(delete("/car/1"))
-                .andExpect(status().isOk());
     }
 
     @Test

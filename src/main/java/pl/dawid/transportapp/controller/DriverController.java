@@ -49,8 +49,8 @@ public class DriverController {
 
     @GetMapping(path = RESOURCE_DRIVER_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource> getAllDrivers() {
-        List<Resource> resourceList = service.findAll().stream()
+    public Resources<Resource<DriverDto>> getAllDrivers() {
+        List<Resource<DriverDto>> resourceList = service.findAll().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
         Link link = linkTo(methodOn(DriverController.class).getAllDrivers()).withSelfRel();
@@ -69,7 +69,7 @@ public class DriverController {
     }
 
     @PostMapping(path = DRIVER_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity postDriver(@Valid @RequestBody DriverDto driverDto) {
+    public ResponseEntity<URI> postDriver(@Valid @RequestBody DriverDto driverDto) {
         Long id = service.addDriver(driverDto);
         URI location = LocationCreator.getLocation(DRIVER_URL, id);
         HttpHeaders headers = new HttpHeaders();
@@ -78,7 +78,7 @@ public class DriverController {
     }
 
     @PutMapping(path = DRIVER_URL + ID_PATH)
-    public ResponseEntity updateDriver(@Valid @RequestBody DriverDto driverDto, @PathVariable Long id) {
+    public ResponseEntity<URI> updateDriver(@Valid @RequestBody DriverDto driverDto, @PathVariable Long id) {
         Long idUpdated = service.update(driverDto, id);
         URI location = LocationCreator.getLocation(DRIVER_URL, idUpdated);
         ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.ok();

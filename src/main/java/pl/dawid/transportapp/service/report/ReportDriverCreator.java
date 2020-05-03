@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Qualifier("driverReport")
 public class ReportDriverCreator {
 
     private final TripService tripService;

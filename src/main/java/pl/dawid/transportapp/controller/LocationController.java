@@ -47,8 +47,8 @@ public class LocationController {
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = RESOURCE_LOCATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource> getAllLocations() {
-        List<Resource> resourceList = service.findAll().stream()
+    public Resources<Resource<LocationDto>> getAllLocations() {
+        List<Resource<LocationDto>> resourceList = service.findAll().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
         Link link = linkTo(methodOn(LocationController.class).getAllLocations()).withSelfRel();
@@ -69,7 +69,7 @@ public class LocationController {
 
     @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PostMapping(path = LOCATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity postLocation(@Valid @RequestBody LocationDto locationDto) {
+    public ResponseEntity<URI> postLocation(@Valid @RequestBody LocationDto locationDto) {
         Long id = service.addLocation(locationDto);
         URI location = LocationCreator.getLocation(LOCATION_URL, id);
         return ResponseEntity.created(location).build();
@@ -77,7 +77,7 @@ public class LocationController {
 
     @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PutMapping(path = LOCATION_URL + ID_PATH)
-    public ResponseEntity updateLocation(@Valid @RequestBody LocationDto locationDto, Long id) {
+    public ResponseEntity<URI> updateLocation(@Valid @RequestBody LocationDto locationDto, Long id) {
         Long idUpdated = service.updateLocation(locationDto);
         URI location = LocationCreator.getLocation(LOCATION_URL, idUpdated);
         return ResponseEntity.created(location).build();

@@ -8,12 +8,12 @@ import com.itextpdf.layout.border.SolidBorder;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import pl.dawid.transportapp.dto.DriverDto;
 import pl.dawid.transportapp.dto.ReportDriver;
 import pl.dawid.transportapp.dto.TripDto;
 import pl.dawid.transportapp.dto.TripReport;
+import pl.dawid.transportapp.service.report.tool.CreatorPdf;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ import java.util.Optional;
 import static pl.dawid.transportapp.service.report.tool.ReportConst.*;
 
 @Component
-@Qualifier("companyPdf")
+@CreatorPdf(type = CreatorPdf.CreatorPdfType.COMPANY_CREATOR)
 public class PdfCompanyCreator implements PdfCreator {
 
     private TripReport tripReport;
@@ -34,16 +34,19 @@ public class PdfCompanyCreator implements PdfCreator {
         PdfDocument pdfDocument = new PdfDocument(writer);
         pdfDocument.addNewPage();
         Document document = new Document(pdfDocument, PageSize.A4);
-        addTitle(document);
-        addSummary(document, tripReport);
-        addDriverContent(document, tripReport);
-        addTableContent(document, tripReport);
+        appendContentToDocument(document);
         document.close();
         return byteArray;
     }
 
-    private void addTitle(Document document) {
+    private void appendContentToDocument(Document document) {
+        addTitle(document);
+        addSummary(document, tripReport);
+        addDriverContent(document, tripReport);
+        addTableContent(document, tripReport);
+    }
 
+    private void addTitle(Document document) {
         Paragraph paragraph = new Paragraph(COMPANY_REPORT);
         paragraph.setTextAlignment(TextAlignment.CENTER);
         paragraph.setFontSize(14);
@@ -96,11 +99,11 @@ public class PdfCompanyCreator implements PdfCreator {
         paragraph.setBold();
         document.add(paragraph);
         tripReport.getReportDrivers().stream()
-                .map(this::populateContent)
+                .map(this::populateContentWithDriver)
                 .forEach(document::add);
     }
 
-    private Paragraph populateContent(ReportDriver reportDriver) {
+    private Paragraph populateContentWithDriver(ReportDriver reportDriver) {
         DriverDto dto = reportDriver.getDriverDto();
         BigDecimal salary = reportDriver.getTrips().stream()
                 .map(TripDto::getDriverSalary)

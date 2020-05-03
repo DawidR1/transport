@@ -82,15 +82,15 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
     }
 
     @Transactional
-    public Long update(DriverDto driverDto, Long id) { //TODO dorobic testy
+    public Long update(DriverDto driverDto, Long id) {
         Driver driverDb = repository.findById(id).orElseThrow(() -> new ExistInDataBase("Driver not found"));
         repository.findByPesel(driverDto.getPesel()).ifPresent(driver -> {
             if (!driver.getId().equals(driverDb.getId())) {
-                throw new ExistInDataBase("Driver with pesel: " + driverDb.getPesel() + " already exist");//FIXME Dawid redundancja, przeniesc do messages
+                throw new ExistInDataBase("Driver with pesel: " + driverDb.getPesel() + " already exist");
             }
         });
         driverDto.setId(id);
-        driverDto.setImageName(driverDb.getImageName());        //TODO przetestowac
+        driverDto.setImageName(driverDb.getImageName());
         Driver driver = convertToEntity(driverDto, new Driver());
         repository.save(driver);
         return driver.getId();
@@ -101,12 +101,5 @@ public class DriverService implements DtoConverter<DriverDto, Driver> {
         String fileName = storeFile.storeFile(multipartFile, id);
         driver.setImageName(fileName);
         repository.save(driver);
-    }
-
-    public Map<Long, String> getIdByName() {
-        return repository.findAll().stream()
-                .collect(Collectors.toMap(
-                        Driver::getId,
-                        entity -> entity.getFirstName() + " " + entity.getLastName()));
     }
 }

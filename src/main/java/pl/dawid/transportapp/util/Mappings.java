@@ -15,9 +15,9 @@ public class Mappings {
     public static final String COMPANY_REPORT = "companyReport";
     public static final String PATH_URL = "/{path}";
     public static final String LOCATION_URL = "location";
-    public static final String RESOURCE_DRIVER_URL = RESOURCE_URL + DRIVER_URL;
-    public static final String RESOURCE_CAR_URL = RESOURCE_URL + CAR_URL;
+    public static final String RESOURCE_DRIVER_URL = RESOURCE_URL + "driver";
+    public static final String RESOURCE_CAR_URL = RESOURCE_URL + "car";
     public static final String RESOURCE_LOCATION_URL = RESOURCE_URL + LOCATION_URL;
-    public static final String RESOURCE_TRIP_URL = RESOURCE_URL + TRIP_URL;
+    public static final String RESOURCE_TRIP_URL = RESOURCE_URL + "trip";
     public static final String AUTH_URL = "/auth";
 }

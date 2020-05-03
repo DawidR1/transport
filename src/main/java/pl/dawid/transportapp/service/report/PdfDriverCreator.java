@@ -11,12 +11,12 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import pl.dawid.transportapp.dto.DriverDto;
 import pl.dawid.transportapp.dto.ReportDriver;
 import pl.dawid.transportapp.dto.TripDto;
 import pl.dawid.transportapp.service.FileStorageService;
+import pl.dawid.transportapp.service.report.tool.CreatorPdf;
 
 import java.io.ByteArrayOutputStream;
 import java.net.MalformedURLException;
@@ -26,11 +26,8 @@ import java.util.Optional;
 import static pl.dawid.transportapp.service.report.tool.ReportConst.*;
 
 @Component
-@Qualifier("driverPdf")
+@CreatorPdf(type = CreatorPdf.CreatorPdfType.DRIVER_CREATOR)
 public class PdfDriverCreator implements PdfCreator {
-
-    private int x = 580;
-    private int y = 850;
 
     private final FileStorageService fileStorageService;
     private ReportDriver reportDriver;

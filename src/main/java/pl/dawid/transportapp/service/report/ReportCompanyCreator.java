@@ -1,13 +1,11 @@
 package pl.dawid.transportapp.service.report;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import pl.dawid.transportapp.dto.ReportDriver;
 import pl.dawid.transportapp.dto.TripDto;
 import pl.dawid.transportapp.dto.TripReport;
 import pl.dawid.transportapp.service.DriverService;
-import pl.dawid.transportapp.util.Mappings;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Qualifier(Mappings.COMPANY_REPORT)
 public class ReportCompanyCreator {
 
     private final ReportDriverCreator reportDriverCreator;

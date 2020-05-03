@@ -19,7 +19,7 @@ public class TripDto {
     private Long id;
 
     @NotNull
-    private TripStatus status; //FIXME dorobic optional
+    private TripStatus status;
 
     @NotNull
     private LocationDto destination;

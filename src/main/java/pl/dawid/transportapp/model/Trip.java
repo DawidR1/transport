@@ -22,13 +22,13 @@ public class Trip {
     private Long id;
     private BigDecimal income;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     private Location placeStart;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     private Location placeFinish;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     private Location destination;
 
     @Column(name = "start_date", nullable = false)
@@ -40,6 +40,7 @@ public class Trip {
     private LocalDate dateFinish;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "trip_id",referencedColumnName = "id")
     private List<LoadingPlace> loadingPlaces;
 
     @ManyToOne

@@ -38,7 +38,9 @@ public class ReportController {
                                               @RequestParam LocalDate end, @RequestParam Format format) {
         ReportDriver report = reportService.generateReportForDriver(id, start, end);
         driverPdfCreator.setReportDriver(report);
-        return format.equals(Format.PDF) ? convertToResponsePdf(driverPdfCreator) : ResponseEntity.ok(report);
+        return format.equals(Format.PDF)
+                ? convertToResponsePdf(driverPdfCreator)
+                : ResponseEntity.ok(report);
     }
 
     @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
@@ -47,7 +49,9 @@ public class ReportController {
                                                @RequestParam Format format) {
         TripReport report = reportService.generateReportForCompany(start, end);
         companyPdfCreator.setTripReport(report);
-        return format.equals(Format.PDF) ? convertToResponsePdf(companyPdfCreator) : ResponseEntity.ok(report);
+        return format.equals(Format.PDF)
+                ? convertToResponsePdf(companyPdfCreator)
+                : ResponseEntity.ok(report);
     }
 
     private ResponseEntity convertToResponsePdf(PdfCreator format) {

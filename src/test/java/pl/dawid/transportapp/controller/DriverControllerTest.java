@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(DriverController.class)
+@WebMvcTest(value = DriverController.class,secure = false)
 class DriverControllerTest {
 
     @MockBean
@@ -49,36 +49,30 @@ class DriverControllerTest {
 
     @Test
     void shouldReturnOKWhenAllDriverRequestedRequested() throws Exception {
-        mvc.perform(get("/driver"))
+        mvc.perform(get("/resource/driver"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void shouldReturnShelfHrefWhenRequested() throws Exception {
-        mvc.perform(get("/driver"))
-                .andExpect(jsonPath("_links.self.href", is("http://localhost/driver")))
-                .andExpect(jsonPath("_embedded.driverDtoes[0]._links.self.href", is("http://localhost/driver/1")));
+        mvc.perform(get("/resource/driver"))
+                .andExpect(jsonPath("_links.self.href", is("http://localhost/resource/driver")))
+                .andExpect(jsonPath("_embedded.driverDtoes[0]._links.self.href", is("http://localhost/resource/driver/1")));
     }
 
     @Test
     void shouldReturnDriverWithIdOneWhenRequested() throws Exception {
-        mvc.perform(get("/driver/1"))
+        mvc.perform(get("/resource/driver/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("firstName", is("firstName1")))
-                .andExpect(jsonPath("_links.self.href", is("http://localhost/driver/1")));
+                .andExpect(jsonPath("_links.self.href", is("http://localhost/resource/driver/1")));
     }
 
     @Test
     void shouldReturn404WhenDriverNotExists() throws Exception {
         when(service.findDtoById(anyLong())).thenReturn(Optional.empty());
-        mvc.perform(get("/driver/4"))
+        mvc.perform(get("/resource/driver/4"))
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void shouldReturn200WhenDriverWasRemoved() throws Exception {
-        mvc.perform(delete("/driver/1"))
-                .andExpect(status().isOk());
     }
 
     @Test

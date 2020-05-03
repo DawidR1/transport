@@ -47,8 +47,8 @@ public class CarController {
 
     @GetMapping(path = RESOURCE_CAR_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource> getAllCars() {
-        List<Resource> resourceList = service.findAll().stream()
+    public Resources<Resource<CarDto>> getAllCars() {
+        List<Resource<CarDto>> resourceList = service.findAll().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
         Link link = linkTo(methodOn(CarController.class).getAllCars()).withSelfRel();
@@ -67,7 +67,7 @@ public class CarController {
     }
 
     @PostMapping(path = CAR_URL)
-    public ResponseEntity postCar(@Valid @RequestBody CarDto carDto) {
+    public ResponseEntity<URI> postCar(@Valid @RequestBody CarDto carDto) {
         Long id = service.addCar(carDto);
         URI location = LocationCreator.getLocation(CAR_URL, id);
         return ResponseEntity.created(location).build();
@@ -75,7 +75,7 @@ public class CarController {
 
     @CrossOrigin(exposedHeaders = "Location")
     @PutMapping(path = CAR_URL + ID_PATH)
-    public ResponseEntity updateCar(@Valid @RequestBody CarDto carDto, @PathVariable Long id) {
+    public ResponseEntity<URI> updateCar(@Valid @RequestBody CarDto carDto, @PathVariable Long id) {
         service.update(carDto, id);
         URI location = LocationCreator.getLocation(CAR_URL, id);
         ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.ok();

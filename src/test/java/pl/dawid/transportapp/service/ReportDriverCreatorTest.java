@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.dawid.transportapp.dto.ReportDriver;
-import pl.dawid.transportapp.repository.TripRepository;
+import pl.dawid.transportapp.service.report.CompanyCalculator;
 import pl.dawid.transportapp.service.report.ReportDriverCreator;
 import pl.dawid.transportapp.tool.ObjectTestGenerator;
 
@@ -28,7 +28,10 @@ class ReportDriverCreatorTest {
     private DriverService driverService;
 
     @Mock
-    private TripRepository tripRepository;
+    private TripService tripService;
+
+    @Mock
+    private CompanyCalculator companyCalculator;
 
     @InjectMocks
     private ReportDriverCreator service;
@@ -37,8 +40,10 @@ class ReportDriverCreatorTest {
     void init() {
         when(driverService.findById(anyLong()))
                 .thenReturn(Optional.of(ObjectTestGenerator.getCorrectDriver(1)));
-        when(tripRepository.findAllByDriverAndDateStartBetween(any(), any(), any()))
+        when(tripService.findAllByDrivers(any(), any(), any()))
                 .thenReturn(Arrays.asList(ObjectTestGenerator.getCorrectTrip(1), ObjectTestGenerator.getCorrectTrip(2)));
+        when(companyCalculator.calculateDriverSalaryBasedOnTrips(any()))
+                .thenReturn(BigDecimal.TEN);
     }
 
     @Test
@@ -46,15 +51,7 @@ class ReportDriverCreatorTest {
         ReportDriver settlement =
                 service.createReport(1, LocalDate.now(), LocalDate.of(2000, 2, 2));
 
-        assertEquals(BigDecimal.valueOf(200), settlement.getSalary());
-    }
-
-    @Test
-    void shouldSetTripsIdWhenRequested() {
-        ReportDriver settlement =
-                service.createReport(1, LocalDate.now(), LocalDate.of(2000, 2, 2));
-
-        assertEquals(Arrays.asList(1L, 2L), settlement.getTrips());
+        assertEquals(BigDecimal.TEN, settlement.getSalary());
     }
 
     @Test

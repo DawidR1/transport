@@ -72,7 +72,6 @@ public class TripService implements DtoConverter<TripDto, Trip> {
     }
 
     public List<TripDto> findAll() {
-        Sort sort;
         Pageable pageable = PageRequest.of(0, 10);
         repository.findAll(pageable);
         return repository.findAll().stream()

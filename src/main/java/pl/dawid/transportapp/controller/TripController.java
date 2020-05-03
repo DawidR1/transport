@@ -49,8 +49,8 @@ public class TripController {
 
     @GetMapping(path = RESOURCE_TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource> getAllTrip() {
-        List<Resource> resourceList = service.findAllWithChildren().stream()
+    public Resources<Resource<TripDto>> getAllTrip() {
+        List<Resource<TripDto>> resourceList = service.findAllWithChildren().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
         Link link = linkTo(methodOn(TripController.class).getAllTrip()).withSelfRel();
@@ -74,14 +74,14 @@ public class TripController {
     }
 
     @PostMapping(path = TRIP_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity postDriver(@Valid @RequestBody TripDto tripDto) {
+    public ResponseEntity<URI> postDriver(@Valid @RequestBody TripDto tripDto) {
         Long id = service.addTrip(tripDto);
         URI location = LocationCreator.getLocation(DRIVER_URL, id);
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping(path = TRIP_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateDriver(@Valid @RequestBody TripDto tripDto) {
+    public ResponseEntity<URI> updateDriver(@Valid @RequestBody TripDto tripDto) {
         Long id = service.addTrip(tripDto);
         URI location = LocationCreator.getLocation(DRIVER_URL, id);
         return ResponseEntity.created(location).build();

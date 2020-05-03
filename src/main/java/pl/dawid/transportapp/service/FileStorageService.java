@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dawid.transportapp.exception.file.FileStorageException;
-import pl.dawid.transportapp.exception.file.MyFileNotFoundException;
+import pl.dawid.transportapp.exception.file.FileNotFoundException;
 import pl.dawid.transportapp.property.FileStoragePropertiesImpl;
 
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class FileStorageService {
             Resource resource = new UrlResource(filePath.toUri());
             return resource.exists() ? Optional.of(resource) : Optional.empty();
         } catch (MalformedURLException ex) {
-            throw new MyFileNotFoundException("File not found " + fileName, ex);
+            throw new FileNotFoundException("File not found " + fileName, ex);
         }
     }
 
