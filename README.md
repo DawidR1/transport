@@ -4,6 +4,8 @@
 One of two applications belonging to the transport project.
 It is the server layer, responsible for communication with the database, with other sevices(using REST API) and report creation.
 
+Second application: ![Client Layer](https://github.com/DawidR1/transport-frontend)
+
 ## Description of transport project  
 
 Project is used to manage of road transport company. It allows to create and archive transport orders and driver routes.
