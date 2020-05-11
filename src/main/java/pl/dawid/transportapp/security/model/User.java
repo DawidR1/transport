@@ -11,10 +11,12 @@ import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "user_account")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(columnDefinition = "serial")
     private Long id;
     @NotEmpty
     @Email

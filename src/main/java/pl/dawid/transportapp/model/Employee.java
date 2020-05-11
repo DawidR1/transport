@@ -14,7 +14,8 @@ import static pl.dawid.transportapp.util.Mappings.DATE_FORMAT;
 public abstract class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(columnDefinition = "serial")
     private Long id;
 
     @Column(nullable = false, unique = true, length = 12)

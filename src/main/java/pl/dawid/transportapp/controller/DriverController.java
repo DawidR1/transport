@@ -5,10 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,8 +24,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static pl.dawid.transportapp.util.Mappings.*;
 
 @RestController
@@ -41,7 +40,7 @@ public class DriverController {
     }
 
     @GetMapping(path = RESOURCE_DRIVER_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Resource<DriverDto> getDriverById(@PathVariable Long id) {
+    public EntityModel<DriverDto> getDriverById(@PathVariable Long id) {
         return service.findDtoById(id)
                 .map(this::mapToResourceWithLink)
                 .orElseThrow(() -> new NotFoundException("Driver with id= " + id + " not found"));
@@ -49,23 +48,23 @@ public class DriverController {
 
     @GetMapping(path = RESOURCE_DRIVER_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource<DriverDto>> getAllDrivers() {
-        List<Resource<DriverDto>> resourceList = service.findAll().stream()
+    public CollectionModel<EntityModel<DriverDto>> getAllDrivers() {
+        List<EntityModel<DriverDto>> resourceList = service.findAll().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
         Link link = linkTo(methodOn(DriverController.class).getAllDrivers()).withSelfRel();
-        return new Resources<>(resourceList, link);
+        return new CollectionModel<>(resourceList, link);
     }
 
     @GetMapping(path = DRIVER_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public PagedResources<Resource<Resource<DriverDto>>> getAllDrivers(Pageable pageable, PagedResourcesAssembler<Resource<DriverDto>> assembler) {
+    public CollectionModel<EntityModel<EntityModel<DriverDto>>> getAllDrivers(Pageable pageable, PagedResourcesAssembler<EntityModel<DriverDto>> assembler) {
         Page<DriverDto> page = service.findAll(pageable);
-        List<Resource<DriverDto>> collect = page.getContent().stream()
+        List<EntityModel<DriverDto>> collect = page.getContent().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(Collectors.toUnmodifiableList());
-        Page<Resource<DriverDto>> resources = new PageImpl<>(collect, page.getPageable(), page.getTotalElements());
-        return assembler.toResource(resources);
+        Page<EntityModel<DriverDto>> resources = new PageImpl<>(collect, page.getPageable(), page.getTotalElements());
+        return assembler.toModel(resources);
     }
 
     @PostMapping(path = DRIVER_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +72,7 @@ public class DriverController {
         Long id = service.addDriver(driverDto);
         URI location = LocationCreator.getLocation(DRIVER_URL, id);
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Access-Control-Expose-Headers","Location");
+        headers.set("Access-Control-Expose-Headers", "Location");
         return ResponseEntity.created(location).headers(headers).build();
     }
 
@@ -85,8 +84,8 @@ public class DriverController {
         return bodyBuilder.location(location).build();
     }
 
-    private Resource<DriverDto> mapToResourceWithLink(DriverDto driver) {
-        Resource<DriverDto> resource = new Resource<>(driver);
+    private EntityModel<DriverDto> mapToResourceWithLink(DriverDto driver) {
+        EntityModel<DriverDto> resource = new EntityModel<>(driver);
         resource.add(linkTo(methodOn(DriverController.class).getDriverById(driver.getId())).withSelfRel());
         if (driver.getImageName() != null) {
             resource.add(linkTo(methodOn(FileController.class).getFile(driver.getImageName())).withRel("image"));

@@ -74,5 +74,12 @@ INSERT INTO cargo (id, number_of_pallets, weight, company_name,loading_place_id)
 INSERT INTO cargo (id, number_of_pallets, weight, company_name,loading_place_id) VALUES (4, 7, 300, 'BMW',3);
 -- ########## CARGO #############
 
+INSERT INTO user_role VALUES (1,'Admin','ADMIN');
+INSERT INTO user_role VALUES (2,'Read-only','USER');
 
+INSERT INTO user_account VALUES (1,'$2a$10$U8MM/DXBkf9SNcuznKCUAu3iEDLJR87OfiWfbnoVsfIp/uqOTXOi6','example@example.pl');
+INSERT INTO user_roles VALUES (1,1);
+
+INSERT INTO user_account VALUES (2,'$2a$10$1blEPenhM7cib70JI./OouPvKHOrjUxkSnGH96zCYhdW/0mEusKKC','user@example.pl');
+INSERT INTO user_roles VALUES (2,2);
 
