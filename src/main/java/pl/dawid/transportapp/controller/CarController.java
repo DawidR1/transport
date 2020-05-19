@@ -5,10 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static pl.dawid.transportapp.util.Mappings.*;
 
 @RestController
@@ -39,7 +40,7 @@ public class CarController {
     }
 
     @GetMapping(path = RESOURCE_CAR_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Resource<CarDto> getCarById(@PathVariable Long id) {
+    public EntityModel<CarDto> getCarById(@PathVariable Long id) {
         return service.findDtoById(id)
                 .map(this::mapToResourceWithLink)
                 .orElseThrow(() -> new NotFoundException("Car with id= " + id + " not found"));
@@ -47,23 +48,23 @@ public class CarController {
 
     @GetMapping(path = RESOURCE_CAR_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource<CarDto>> getAllCars() {
-        List<Resource<CarDto>> resourceList = service.findAll().stream()
+    public CollectionModel<EntityModel<CarDto>> getAllCars() {
+        List<EntityModel<CarDto>> resourceList = service.findAll().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
         Link link = linkTo(methodOn(CarController.class).getAllCars()).withSelfRel();
-        return new Resources<>(resourceList, link);
+        return new CollectionModel<>(resourceList, link);
     }
 
     @GetMapping(path = CAR_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public PagedResources<Resource<Resource<CarDto>>> getAllCars(Pageable pageable, PagedResourcesAssembler<Resource<CarDto>> assembler) {
+    public CollectionModel<EntityModel<EntityModel<CarDto>>> getAllCars(Pageable pageable, PagedResourcesAssembler<EntityModel<CarDto>> assembler) {
         Page<CarDto> page = service.findAll(pageable);
-        List<Resource<CarDto>> collect = page.getContent().stream()
+        List<EntityModel<CarDto>> collect = page.getContent().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(Collectors.toUnmodifiableList());
-        Page<Resource<CarDto>> resources = new PageImpl<>(collect, page.getPageable(), page.getTotalElements());
-        return assembler.toResource(resources);
+        Page<EntityModel<CarDto>> resources = new PageImpl<>(collect, page.getPageable(), page.getTotalElements());
+        return assembler.toModel(resources);
     }
 
     @PostMapping(path = CAR_URL)
@@ -82,8 +83,8 @@ public class CarController {
         return bodyBuilder.location(location).build();
     }
 
-    private Resource<CarDto> mapToResourceWithLink(CarDto car) {
-        Resource<CarDto> resource = new Resource<>(car);
+    private EntityModel<CarDto> mapToResourceWithLink(CarDto car) {
+        EntityModel<CarDto> resource = new EntityModel<>(car);
         resource.add(linkTo(methodOn(CarController.class).getCarById(car.getId())).withSelfRel());
         return resource;
     }
