@@ -1,14 +1,14 @@
 # Transport Project  
 
 ## Short description  
-One of two applications belonging to the transport project.
-It is the server layer, responsible for communication with the database, with other sevices(using REST API) and report creation.
 
-Second application: ![Client Layer](https://github.com/DawidR1/transport-frontend)
+Application that allows to save/read the data on the transport(drivers, vehicles, trips) and allows to create reports.  
+Communication with the service is via REST API and the data are stored in Postgresql.
 
-## Description of transport project  
-
-Project is used to manage of road transport company. It allows to create and archive transport orders and driver routes.
+## Demo
+Example of operation of the application along with ![Angular application](https://github.com/DawidR1/transport-frontend)  
+  
+#### ![Demo](https://dawid-transport-demo.herokuapp.com/)   
 
 ## Technologies:
 - Java
@@ -16,4 +16,4 @@ Project is used to manage of road transport company. It allows to create and arc
 - Spring data JPA 
 - Hateoas
 - Spring security (JWT)
-- MySQL
+- Postgresql
