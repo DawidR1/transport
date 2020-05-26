@@ -8,7 +8,7 @@ Communication with the service is via REST API and the data are stored in Postgr
 ## Demo
 Example of operation of the application along with ![Angular application](https://github.com/DawidR1/transport-frontend)  
   
-#### ![Demo](https://dawid-transport-demo.herokuapp.com/)   
+#### https://dawid-transport-demo.herokuapp.com
 
 ## Technologies:
 - Java
