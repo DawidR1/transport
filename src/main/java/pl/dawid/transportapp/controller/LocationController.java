@@ -4,10 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static pl.dawid.transportapp.util.Mappings.*;
 
 @RestController
@@ -36,38 +36,34 @@ public class LocationController {
         this.service = service;
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = RESOURCE_LOCATION_URL + ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Resource<LocationDto> getLocationById(@PathVariable Long id) {
+    public EntityModel<LocationDto> getLocationById(@PathVariable Long id) {
         return service.findDtoById(id)
                 .map(this::mapToResourceWithLink)
                 .orElseThrow(() -> new NotFoundException("Location with id= " + id + " not found"));
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = RESOURCE_LOCATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Resources<Resource<LocationDto>> getAllLocations() {
-        List<Resource<LocationDto>> resourceList = service.findAll().stream()
+    public CollectionModel<EntityModel<LocationDto>> getAllLocations() {
+        List<EntityModel<LocationDto>> resourceList = service.findAll().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(toList());
         Link link = linkTo(methodOn(LocationController.class).getAllLocations()).withSelfRel();
-        return new Resources<>(resourceList, link);
+        return new CollectionModel<>(resourceList, link);
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = LOCATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public PagedResources<Resource<Resource<LocationDto>>> getAllLocations(Pageable pageable, PagedResourcesAssembler<Resource<LocationDto>> assembler) {
+    public PagedModel<EntityModel<EntityModel<LocationDto>>> getAllLocations(Pageable pageable, PagedResourcesAssembler<EntityModel<LocationDto>> assembler) {
         Page<LocationDto> page = service.findAll(pageable);
-        List<Resource<LocationDto>> content = page.getContent().stream()
+        List<EntityModel<LocationDto>> content = page.getContent().stream()
                 .map(this::mapToResourceWithLink)
                 .collect(Collectors.toUnmodifiableList());
-        Page<Resource<LocationDto>> resources = new PageImpl<>(content, page.getPageable(), page.getTotalElements());
-        return assembler.toResource(resources);
+        Page<EntityModel<LocationDto>> resources = new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+        return assembler.toModel(resources);
     }
 
-    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PostMapping(path = LOCATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<URI> postLocation(@Valid @RequestBody LocationDto locationDto) {
         Long id = service.addLocation(locationDto);
@@ -75,7 +71,6 @@ public class LocationController {
         return ResponseEntity.created(location).build();
     }
 
-    @CrossOrigin(value = CROSS_ORIGIN_LOCAL_FRONT, exposedHeaders = "Location")
     @PutMapping(path = LOCATION_URL + ID_PATH)
     public ResponseEntity<URI> updateLocation(@Valid @RequestBody LocationDto locationDto, Long id) {
         Long idUpdated = service.updateLocation(locationDto);
@@ -83,8 +78,8 @@ public class LocationController {
         return ResponseEntity.created(location).build();
     }
 
-    private Resource<LocationDto> mapToResourceWithLink(LocationDto location) {
-        Resource<LocationDto> resource = new Resource<>(location);
+    private EntityModel<LocationDto> mapToResourceWithLink(LocationDto location) {
+        EntityModel<LocationDto> resource = new EntityModel<>(location);
         resource.add(linkTo(methodOn(LocationController.class).getLocationById(location.getId())).withSelfRel());
         return resource;
     }

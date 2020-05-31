@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.6.RELEASE</version>
+        <version>2.2.7.RELEASE</version>
         <relativePath/>
     </parent>
     <groupId>pl.dawid</groupId>
@@ -15,7 +15,7 @@
     <description>transport application</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>13</java.version>
     </properties>
 
     <dependencies>
@@ -45,9 +45,9 @@
             <version>0.9.1</version>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.18</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.12</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -57,18 +57,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.3.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>2.23.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -148,6 +136,11 @@
             <groupId>com.itextpdf</groupId>
             <artifactId>hyph</artifactId>
             <version>7.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>9.0.34</version>
         </dependency>
     </dependencies>
 

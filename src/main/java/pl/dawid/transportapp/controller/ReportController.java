@@ -32,7 +32,6 @@ public class ReportController {
         this.companyPdfCreator = companyPdfCreator;
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = DRIVER_URL + ID_PATH + REPORT_URL)
     public ResponseEntity getReportDriverById(@PathVariable Long id, @RequestParam LocalDate start,
                                               @RequestParam LocalDate end, @RequestParam Format format) {
@@ -43,7 +42,6 @@ public class ReportController {
                 : ResponseEntity.ok(report);
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @GetMapping(path = COMPANY_URL + REPORT_URL)
     public ResponseEntity getReportCompanyById(@RequestParam LocalDate start, @RequestParam LocalDate end,
                                                @RequestParam Format format) {

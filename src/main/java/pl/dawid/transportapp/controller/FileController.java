@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dawid.transportapp.service.DriverService;
 import pl.dawid.transportapp.service.FileStorageService;
-import pl.dawid.transportapp.util.Mappings;
 
 import static pl.dawid.transportapp.util.Mappings.*;
 import static pl.dawid.transportapp.util.Mappings.FILE_URL;
@@ -26,7 +25,6 @@ public class FileController {
         this.service = service;
     }
 
-    @CrossOrigin(CROSS_ORIGIN_LOCAL_FRONT)
     @PostMapping(DRIVER_URL + ID_PATH)
     public ResponseEntity saveFile(@RequestParam("file") MultipartFile multipartFile,
                                    @PathVariable Long id) {

@@ -21,7 +21,7 @@ public class UserController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @PostMapping()
+    @PostMapping
     public void signUp(@RequestBody User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         UserRole userRole = new UserRole();
@@ -30,8 +30,8 @@ public class UserController {
         repository.save(user);
     }
 
-    @GetMapping()
-    public List get() {
-      return   repository.findAll();
+    @GetMapping
+    public List<User> get() {
+        return repository.findAll();
     }
 }

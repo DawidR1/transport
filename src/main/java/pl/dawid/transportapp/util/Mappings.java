@@ -6,7 +6,7 @@ public class Mappings {
     public static final String ID_PATH = "/{id}";
     public static final String CAR_URL = "/car";
     public static final String FILE_URL = "/file";
-    public static final String CROSS_ORIGIN_LOCAL_FRONT = "http://localhost:4200";
+    public static final String CROSS_ORIGIN_FRONT = "https://dawid-transport-demo.herokuapp.com";
     public static final String TRIP_URL = "/trip";
     public static final String REPORT_URL = "/report";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
